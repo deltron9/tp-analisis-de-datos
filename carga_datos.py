@@ -7,7 +7,7 @@ os.environ["PYEPH_CACHE_DIR"] = os.path.abspath(CARPETA_DATOS)
 
 import pyeph
 
-AGLOMERADOS_ESTUDIO = [33, 8]  # Gran Buenos Aires (33) y Mar del Plata (8)
+AGLOMERADOS_ESTUDIO = [33, 32]  # Gran Buenos Aires (33) y Mar del Plata (8)
 ANIO_INICIO = 2016
 ANIO_FIN = 2026
 

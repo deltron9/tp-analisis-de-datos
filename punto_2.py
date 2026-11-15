@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Configuración para mostrar TODAS las filas en la consola (sin recortar años)
+# Mostrar todas las filas y columnas completas en consola (2016-2026)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 1000)
@@ -12,18 +12,17 @@ sns.set_theme(style="whitegrid")
 plt.rcParams['figure.figsize'] = (12, 6)
 
 # -------------------------------------------------------------------------
-# 1. CARGA DE DATOS Y SELECCIÓN DE AGLOMERADOS
+# 1. CARGA DE DATOS Y SELECCIÓN DE AGLOMERADOS (33 y 32)
 # -------------------------------------------------------------------------
 ruta_csv = 'datos/eph_microdatos.csv'
 df = pd.read_csv(ruta_csv)
 df.columns = df.columns.str.strip().str.upper()
 
-# Convertir P21 a flotante por si viene en formato texto
 if df['P21'].dtype == object:
     df['P21'] = df['P21'].str.replace(',', '.').astype(float)
 
 AGLO_1_COD, AGLO_1_NOM = 33, 'Gran Buenos Aires'
-AGLO_2_COD, AGLO_2_NOM = 8, 'Gran La Plata'
+AGLO_2_COD, AGLO_2_NOM = 32, 'CABA'
 
 df = df[df['AGLOMERADO'].isin([AGLO_1_COD, AGLO_2_COD])].copy()
 df['AGLOMERADO_NOM'] = df['AGLOMERADO'].map({AGLO_1_COD: AGLO_1_NOM, AGLO_2_COD: AGLO_2_NOM})
@@ -79,7 +78,7 @@ bins = [0, 29, 49, 100]
 labels = ['15-29 años', '30-49 años', '50+ años']
 ocupados_ingreso['GRUPO_EDAD'] = pd.cut(ocupados_ingreso['CH06'], bins=bins, labels=labels)
 
-ingreso_edad = ocupados_ingreso.groupby(['ANO4', 'AGLOMERADO_NOM', 'GRUPO_EDAD']).apply(
+ingreso_edad = ocupados_ingreso.groupby(['ANO4', 'AGLOMERADO_NOM', 'GRUPO_EDAD'], observed=False).apply(
     lambda g: np.average(g['P21'], weights=g['PONDERA']) if len(g) > 0 else np.nan
 ).reset_index(name='Ingreso_Medio')
 
@@ -91,7 +90,7 @@ print(ingreso_edad)
 # -------------------------------------------------------------------------
 # 5. VISUALIZACIÓN GRÁFICA
 # -------------------------------------------------------------------------
-colores = {'Gran Buenos Aires': '#e67e22', 'Gran La Plata': '#4b0082'}
+colores = {'Gran Buenos Aires': '#ff8c00', 'CABA': '#4b0082'}
 
 # Figura 1: Tasas del mercado laboral
 fig, axes = plt.subplots(1, 3, figsize=(18, 5))
@@ -106,7 +105,7 @@ axes[1].set_title("Tasa de Empleo (%)", fontweight='bold')
 sns.lineplot(data=tasas, x='ANO4', y='tasa_desocupacion', hue='AGLOMERADO_NOM', palette=colores, marker='^', linewidth=2.5, ax=axes[2])
 axes[2].set_title("Tasa de Desocupación (%)", fontweight='bold')
 
-plt.suptitle("Evolución de Indicadores del Mercado Laboral (2016-2026)", fontsize=14, fontweight='bold')
+plt.suptitle("Evolución de Indicadores del Mercado Laboral: GBA vs CABA (2016-2026)", fontsize=14, fontweight='bold')
 plt.tight_layout()
 plt.show()
 
