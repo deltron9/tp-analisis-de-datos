@@ -33,10 +33,7 @@ for anio in range(ANIO_INICIO, ANIO_FIN + 1):
             )
             
             if df_t is not None and not df_t.empty:
-                # Estandarizado de nombres de columnas a mayúsculas
                 df_t.columns = [c.strip().upper() for c in df_t.columns]
-                
-                # Conversión de la columna de aglomerado a numérica
                 df_t['AGLOMERADO'] = pd.to_numeric(df_t['AGLOMERADO'], errors='coerce')
                 
                 # Filtrar solo GBA (33) y CABA (32)
@@ -45,8 +42,6 @@ for anio in range(ANIO_INICIO, ANIO_FIN + 1):
                 if not df_filtrado.empty:
                     df_filtrado['ANO4'] = anio
                     df_filtrado['TRIMESTRE'] = trimestre
-                    
-                    # Se agrega al listado en memoria
                     dfs_lista.append(df_filtrado)
                     print(f"LISTO CAPO: ({len(df_filtrado)} filas agregadas)")
                 else:
@@ -69,13 +64,11 @@ if dfs_lista:
     df_canastas.columns = [c.strip().upper() for c in df_canastas.columns]
     print("Columnas detectadas en canastas:", df_canastas.columns.tolist())
     
-    # Filtrar región GBA (incluye CABA y Partidos del GBA) si existe la columna REGION
     if 'REGION' in df_canastas.columns:
         filtro_gba = df_canastas['REGION'].astype(str).str.upper().isin(['GBA', '1', 'GRAN BUENOS AIRES'])
         if filtro_gba.any():
             df_canastas = df_canastas[filtro_gba].copy()
             
-    # Extraer ANO4 y TRIMESTRE automáticamente según el formato de la tabla de canastas
     if 'PERIODO' in df_canastas.columns:
         periodo_str = df_canastas['PERIODO'].astype(str)
         df_canastas['ANO4'] = periodo_str.str.extract(r'(\d{4})').astype(int)
@@ -90,33 +83,35 @@ if dfs_lista:
         df_canastas['ANO4'] = fechas.dt.year
         df_canastas['TRIMESTRE'] = fechas.dt.quarter
 
-    # Identificar la columna de Canasta Básica Total ('CBT' o similar)
     col_cbt = [c for c in df_canastas.columns if 'CBT' in c][0]
     df_canastas[col_cbt] = pd.to_numeric(df_canastas[col_cbt], errors='coerce')
 
-    # Agrupar CBT promedio por Año y Trimestre
     cbt_trimestral = df_canastas.groupby(['ANO4', 'TRIMESTRE'])[col_cbt].mean().reset_index()
     cbt_trimestral.rename(columns={col_cbt: 'CBT_TRIM'}, inplace=True)
     
     # 2. Unir CBT a los microdatos por Año y Trimestre
     df_consolidado = pd.merge(df_consolidado, cbt_trimestral, on=['ANO4', 'TRIMESTRE'], how='left')
     
-    # Tomar la CBT más reciente como base para expresar todos los ingresos en pesos constantes actuales
+    # Verificar si quedó algún trimestre sin CBT
+    sin_cbt = df_consolidado[df_consolidado['CBT_TRIM'].isna()][['ANO4', 'TRIMESTRE']].drop_duplicates()
+    if not sin_cbt.empty:
+        print("\nAVISO - Trimestres sin CBT en pyeph:", sin_cbt.to_dict('records'))
+    
     cbt_base = df_consolidado['CBT_TRIM'].max()
     
     # 3. Calcular ingresos en términos reales (deflactados)
     for col_ing in ['P47T', 'P21', 'ITF', 'IPCF']:
         if col_ing in df_consolidado.columns:
             df_consolidado[col_ing] = pd.to_numeric(df_consolidado[col_ing], errors='coerce')
-            # Mantener códigos negativos (-9) o ceros intactos, y deflactar solo montos positivos
             df_consolidado[f'{col_ing}_REAL'] = df_consolidado[col_ing].where(
                 df_consolidado[col_ing] <= 0,
                 (df_consolidado[col_ing] / df_consolidado['CBT_TRIM']) * cbt_base
             )
 
-    # 4. Seleccionar columnas a guardar (incluyendo las versiones _REAL)
+    # 4. Seleccionar columnas a guardar (incluyendo ponderadores de ingreso PONDIIO y PONDII)
     cols_interes = [
-        'ANO4', 'TRIMESTRE', 'AGLOMERADO', 'ESTADO', 'PONDERA', 
+        'ANO4', 'TRIMESTRE', 'AGLOMERADO', 'ESTADO', 
+        'PONDERA', 'PONDIIO', 'PONDII',
         'CH04', 'CH06', 'NIVEL_ED', 'CAT_OCUP',
         'P47T', 'P47T_REAL', 'P21', 'P21_REAL', 'ITF', 'ITF_REAL', 'IPCF', 'IPCF_REAL',
         'PP04B_COD', 'PP04D_COD', 'PP04C', 'PP3E_TOT'
