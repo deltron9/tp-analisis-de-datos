@@ -26,4 +26,5 @@
 - Cristian Collante.
 
 variables según estructura del INDEC: [EPH total urbano](https://www.indec.gob.ar/ftp/cuadros/menusuperior/eahu/EPH_tot_urbano_estructura_bases.pdf)
+
 IPC para deflactar: [Informe de IPC actual](https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31) + empalme con datos desde 04/2016 a 12/2016
