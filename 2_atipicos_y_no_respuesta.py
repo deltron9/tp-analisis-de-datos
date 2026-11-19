@@ -28,7 +28,7 @@ ocupados = df_filtrado[df_filtrado['ESTADO'] == 1].copy()
 # -------------------------------------------------------------------------
 # 2. CÁLCULO DE NO RESPUESTA Y ATÍPICOS (SOBRE OCUPADOS)
 # -------------------------------------------------------------------------
-# No respuesta (-9) o ingreso cero (<= 0) / NaN
+# No respuesta (-9), ingreso cero (<= 0) o NaN
 ocupados['no_resp_ingreso'] = (ocupados[col_ingreso] <= 0) | (ocupados[col_ingreso].isna())
 
 def detectar_outliers_iqr(serie):
@@ -90,7 +90,6 @@ ax1.set_ylabel("Porcentaje sobre el total de ocupados", fontsize=10.5, fontweigh
 ax1.set_xlabel("")
 ax1.set_ylim(0, df_fig1['Porcentaje'].max() * 1.22)
 
-# Etiquetas con porcentaje + cantidad exacta de casos entre paréntesis
 casos_ordenados = [
     df_fig1[(df_fig1['Metrica'].str.startswith('No respuesta')) & (df_fig1['AGLOMERADO_NOM'] == 'CABA')]['Casos'].values[0],
     df_fig1[(df_fig1['Metrica'].str.startswith('Valores atípicos')) & (df_fig1['AGLOMERADO_NOM'] == 'CABA')]['Casos'].values[0],
@@ -111,10 +110,14 @@ for p, casos in zip(ax1.patches, casos_ordenados):
             xytext=(0, 4), textcoords='offset points'
         )
 
+n_caba_tot = int(resumen.loc[resumen['AGLOMERADO_NOM'] == 'CABA', 'total_ocupados'].values[0])
+n_gba_tot = int(resumen.loc[resumen['AGLOMERADO_NOM'] == 'Gran Buenos Aires', 'total_ocupados'].values[0])
+
 handles, _ = ax1.get_legend_handles_labels()
 ax1.legend(
     handles,
-    ['CABA (n = 36.538 ocupados)', 'Gran Buenos Aires (n = 110.090 ocupados)'],
+    [f"CABA (n = {n_caba_tot:,} ocupados)".replace(',', '.'),
+     f"Gran Buenos Aires (n = {n_gba_tot:,} ocupados)".replace(',', '.')],
     title="", loc='upper right', frameon=True, fontsize=9.5
 )
 
@@ -162,20 +165,28 @@ ax2.yaxis.grid(True, linestyle=':', color='gray', alpha=0.5)
 ax2.xaxis.grid(False)
 ax2.spines['top'].set_visible(False)
 ax2.spines['right'].set_visible(False)
-ax2.set_ylabel("Ingreso real en millones de pesos", fontsize=10.5, fontweight='bold')
+ax2.set_ylabel("Ingreso real en millones de pesos (2026-T2)", fontsize=10.5, fontweight='bold')
 
-# Cuadro de métricas clave fuera del área de trazado (a la derecha)
+# Cálculo dinámico de métricas clave
+q1_caba, q2_caba, q3_caba = data_caba.quantile([0.25, 0.50, 0.75])
+iqr_caba = q3_caba - q1_caba
+umb_caba = q3_caba + 1.5 * iqr_caba
+
+q1_gba, q2_gba, q3_gba = data_gba.quantile([0.25, 0.50, 0.75])
+iqr_gba = q3_gba - q1_gba
+umb_gba = q3_gba + 1.5 * iqr_gba
+
 texto_resumen = (
     "Métricas clave (sin ponderar)\n"
     "──────────────────────────────\n"
     "■ CABA:\n"
-    "   • Mediana (Q2): $1,29M\n"
-    "   • Rango IQR: $1,18M\n"
-    "   • Umbral atípico: $3,76M\n\n"
+    f"   • Mediana (Q2): ${q2_caba:.2f}M\n".replace('.', ',') +
+    f"   • Rango IQR: ${iqr_caba:.2f}M\n".replace('.', ',') +
+    f"   • Umbral atípico: ${umb_caba:.2f}M\n\n".replace('.', ',') +
     "■ Gran Buenos Aires:\n"
-    "   • Mediana (Q2): $0,90M\n"
-    "   • Rango IQR: $0,93M\n"
-    "   • Umbral atípico: $2,81M"
+    f"   • Mediana (Q2): ${q2_gba:.2f}M\n".replace('.', ',') +
+    f"   • Rango IQR: ${iqr_gba:.2f}M\n".replace('.', ',') +
+    f"   • Umbral atípico: ${umb_gba:.2f}M".replace('.', ',')
 )
 
 ax2.text(
