@@ -24,3 +24,5 @@
 - Ezequiel Morán.  
 
 - Cristian Collante.
+
+*variables sacadas de: [EPH total urbano](https://www.indec.gob.ar/ftp/cuadros/menusuperior/eahu/EPH_tot_urbano_estructura_bases.pdf)
