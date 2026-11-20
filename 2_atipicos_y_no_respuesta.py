@@ -197,7 +197,7 @@ ax2.yaxis.grid(True, linestyle=':', color='gray', alpha=0.5)
 ax2.xaxis.grid(False)
 ax2.spines['top'].set_visible(False)
 ax2.spines['right'].set_visible(False)
-ax2.set_ylabel("Ingreso real en millones de pesos", fontsize=10.5, fontweight='bold')
+ax2.set_ylabel("Ingreso real en millones de pesos (2026-T2)", fontsize=10.5, fontweight='bold')
 
 # Cuadro de métricas calculado desde los datos
 fm = lambda x: f"${x:,.2f}M".replace('.', ',')
