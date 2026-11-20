@@ -1,111 +1,329 @@
-﻿ANO4,AGLO,NIVEL,Actividad,Empleo,Desocupación
-2016,CABA,Hasta primaria incompleta,30.7,30.05,2.11
-2016,CABA,Primaria completa / Sec. incompleta,50.94,48.25,5.29
-2016,CABA,Secundaria completa,66.63,63.1,5.29
-2016,CABA,Superior / Univ. completo,81.51,78.76,3.37
-2016,CABA,Superior / Univ. incompleto,77.55,71.08,8.34
-2016,Gran Buenos Aires,Hasta primaria incompleta,36.03,33.69,6.5
-2016,Gran Buenos Aires,Primaria completa / Sec. incompleta,58.42,53.22,8.91
-2016,Gran Buenos Aires,Secundaria completa,71.0,65.63,7.55
-2016,Gran Buenos Aires,Superior / Univ. completo,79.96,77.79,2.71
-2016,Gran Buenos Aires,Superior / Univ. incompleto,78.39,70.95,9.48
-2017,CABA,Hasta primaria incompleta,38.91,36.97,4.98
-2017,CABA,Primaria completa / Sec. incompleta,49.95,46.5,6.92
-2017,CABA,Secundaria completa,64.97,60.92,6.23
-2017,CABA,Superior / Univ. completo,80.89,77.95,3.64
-2017,CABA,Superior / Univ. incompleto,76.04,69.56,8.53
-2017,Gran Buenos Aires,Hasta primaria incompleta,39.16,34.87,10.93
-2017,Gran Buenos Aires,Primaria completa / Sec. incompleta,59.34,53.84,9.27
-2017,Gran Buenos Aires,Secundaria completa,70.32,65.66,6.64
-2017,Gran Buenos Aires,Superior / Univ. completo,78.38,75.59,3.56
-2017,Gran Buenos Aires,Superior / Univ. incompleto,77.1,72.08,6.51
-2018,CABA,Hasta primaria incompleta,38.32,34.28,10.55
-2018,CABA,Primaria completa / Sec. incompleta,48.11,43.87,8.8
-2018,CABA,Secundaria completa,64.98,61.13,5.93
-2018,CABA,Superior / Univ. completo,80.91,77.85,3.78
-2018,CABA,Superior / Univ. incompleto,74.55,67.93,8.88
-2018,Gran Buenos Aires,Hasta primaria incompleta,36.73,32.85,10.56
-2018,Gran Buenos Aires,Primaria completa / Sec. incompleta,58.03,51.94,10.49
-2018,Gran Buenos Aires,Secundaria completa,71.81,65.1,9.35
-2018,Gran Buenos Aires,Superior / Univ. completo,80.26,77.51,3.42
-2018,Gran Buenos Aires,Superior / Univ. incompleto,77.81,71.26,8.43
-2019,CABA,Hasta primaria incompleta,32.38,30.61,5.46
-2019,CABA,Primaria completa / Sec. incompleta,51.64,47.04,8.9
-2019,CABA,Secundaria completa,66.22,60.5,8.63
-2019,CABA,Superior / Univ. completo,82.54,79.61,3.55
-2019,CABA,Superior / Univ. incompleto,75.23,69.96,7.01
-2019,Gran Buenos Aires,Hasta primaria incompleta,37.61,33.22,11.67
-2019,Gran Buenos Aires,Primaria completa / Sec. incompleta,57.75,51.47,10.86
-2019,Gran Buenos Aires,Secundaria completa,70.74,63.6,10.09
-2019,Gran Buenos Aires,Superior / Univ. completo,80.81,77.94,3.55
-2019,Gran Buenos Aires,Superior / Univ. incompleto,78.34,71.14,9.2
-2020,CABA,Hasta primaria incompleta,42.03,33.14,21.17
-2020,CABA,Primaria completa / Sec. incompleta,48.17,44.48,7.67
-2020,CABA,Secundaria completa,62.65,56.82,9.31
-2020,CABA,Superior / Univ. completo,78.93,75.74,4.05
-2020,CABA,Superior / Univ. incompleto,70.65,62.59,11.41
-2020,Gran Buenos Aires,Hasta primaria incompleta,34.27,29.59,13.65
-2020,Gran Buenos Aires,Primaria completa / Sec. incompleta,53.82,46.84,12.97
-2020,Gran Buenos Aires,Secundaria completa,62.48,56.01,10.35
-2020,Gran Buenos Aires,Superior / Univ. completo,77.27,73.23,5.22
-2020,Gran Buenos Aires,Superior / Univ. incompleto,74.16,67.97,8.34
-2021,CABA,Hasta primaria incompleta,20.35,17.5,13.98
-2021,CABA,Primaria completa / Sec. incompleta,53.81,47.88,11.03
-2021,CABA,Secundaria completa,61.03,56.4,7.59
-2021,CABA,Superior / Univ. completo,79.64,77.27,2.97
-2021,CABA,Superior / Univ. incompleto,75.6,70.13,7.24
-2021,Gran Buenos Aires,Hasta primaria incompleta,37.29,34.81,6.67
-2021,Gran Buenos Aires,Primaria completa / Sec. incompleta,58.55,53.3,8.96
-2021,Gran Buenos Aires,Secundaria completa,68.98,63.12,8.5
-2021,Gran Buenos Aires,Superior / Univ. completo,78.93,76.32,3.31
-2021,Gran Buenos Aires,Superior / Univ. incompleto,79.16,71.89,9.18
-2022,CABA,Hasta primaria incompleta,39.36,37.98,3.51
-2022,CABA,Primaria completa / Sec. incompleta,53.88,51.57,4.28
-2022,CABA,Secundaria completa,59.2,57.15,3.45
-2022,CABA,Superior / Univ. completo,81.17,78.74,2.99
-2022,CABA,Superior / Univ. incompleto,79.55,75.76,4.76
-2022,Gran Buenos Aires,Hasta primaria incompleta,39.13,36.88,5.73
-2022,Gran Buenos Aires,Primaria completa / Sec. incompleta,59.49,55.55,6.63
-2022,Gran Buenos Aires,Secundaria completa,72.07,66.67,7.49
-2022,Gran Buenos Aires,Superior / Univ. completo,79.58,77.05,3.18
-2022,Gran Buenos Aires,Superior / Univ. incompleto,79.05,74.39,5.9
-2023,CABA,Hasta primaria incompleta,37.82,37.82,0.0
-2023,CABA,Primaria completa / Sec. incompleta,57.22,55.43,3.14
-2023,CABA,Secundaria completa,65.83,63.31,3.83
-2023,CABA,Superior / Univ. completo,80.4,78.66,2.16
-2023,CABA,Superior / Univ. incompleto,79.52,77.44,2.62
-2023,Gran Buenos Aires,Hasta primaria incompleta,32.79,30.89,5.78
-2023,Gran Buenos Aires,Primaria completa / Sec. incompleta,60.05,56.45,6.0
-2023,Gran Buenos Aires,Secundaria completa,72.68,68.21,6.15
-2023,Gran Buenos Aires,Superior / Univ. completo,81.49,79.31,2.68
-2023,Gran Buenos Aires,Superior / Univ. incompleto,77.4,72.78,5.97
-2024,CABA,Hasta primaria incompleta,33.71,30.52,9.44
-2024,CABA,Primaria completa / Sec. incompleta,55.45,52.38,5.54
-2024,CABA,Secundaria completa,66.07,62.82,4.93
-2024,CABA,Superior / Univ. completo,81.23,79.38,2.27
-2024,CABA,Superior / Univ. incompleto,76.03,72.99,4.0
-2024,Gran Buenos Aires,Hasta primaria incompleta,35.43,33.07,6.64
-2024,Gran Buenos Aires,Primaria completa / Sec. incompleta,59.55,54.41,8.64
-2024,Gran Buenos Aires,Secundaria completa,73.96,68.28,7.69
-2024,Gran Buenos Aires,Superior / Univ. completo,80.94,78.45,3.07
-2024,Gran Buenos Aires,Superior / Univ. incompleto,77.95,73.12,6.2
-2025,CABA,Hasta primaria incompleta,37.6,37.6,0.0
-2025,CABA,Primaria completa / Sec. incompleta,53.78,50.55,5.99
-2025,CABA,Secundaria completa,66.32,63.89,3.66
-2025,CABA,Superior / Univ. completo,80.43,78.26,2.69
-2025,CABA,Superior / Univ. incompleto,79.18,75.02,5.26
-2025,Gran Buenos Aires,Hasta primaria incompleta,37.26,33.72,9.49
-2025,Gran Buenos Aires,Primaria completa / Sec. incompleta,60.52,55.13,8.91
-2025,Gran Buenos Aires,Secundaria completa,72.31,67.24,7.01
-2025,Gran Buenos Aires,Superior / Univ. completo,80.29,77.23,3.82
-2025,Gran Buenos Aires,Superior / Univ. incompleto,78.67,72.5,7.84
-2026,CABA,Hasta primaria incompleta,51.11,46.07,9.86
-2026,CABA,Primaria completa / Sec. incompleta,56.57,51.31,9.3
-2026,CABA,Secundaria completa,62.24,60.18,3.3
-2026,CABA,Superior / Univ. completo,81.61,80.07,1.89
-2026,CABA,Superior / Univ. incompleto,71.55,66.87,6.54
-2026,Gran Buenos Aires,Hasta primaria incompleta,37.41,34.78,7.02
-2026,Gran Buenos Aires,Primaria completa / Sec. incompleta,59.46,53.65,9.77
-2026,Gran Buenos Aires,Secundaria completa,73.69,67.95,7.8
-2026,Gran Buenos Aires,Superior / Univ. completo,77.91,74.01,5.0
-2026,Gran Buenos Aires,Superior / Univ. incompleto,78.29,73.3,6.37
+﻿ANO4,TRIMESTRE,AGLO,NIVEL,Actividad,Empleo,Desocupación
+2016,2,CABA,Hasta secundaria incompleta,48.93,47.6,2.72
+2016,2,CABA,Secundaria completa,67.52,62.6,7.29
+2016,2,CABA,Superior / Univ. completo,80.87,77.45,4.23
+2016,2,CABA,Superior / Univ. incompleto,83.03,72.75,12.38
+2016,2,Gran Buenos Aires,Hasta secundaria incompleta,55.83,50.19,10.11
+2016,2,Gran Buenos Aires,Secundaria completa,70.33,64.63,8.11
+2016,2,Gran Buenos Aires,Superior / Univ. completo,80.23,77.41,3.52
+2016,2,Gran Buenos Aires,Superior / Univ. incompleto,81.81,75.21,8.07
+2016,3,CABA,Hasta secundaria incompleta,48.7,45.1,7.4
+2016,3,CABA,Secundaria completa,64.75,61.68,4.73
+2016,3,CABA,Superior / Univ. completo,80.19,77.83,2.94
+2016,3,CABA,Superior / Univ. incompleto,78.22,72.22,7.67
+2016,3,Gran Buenos Aires,Hasta secundaria incompleta,54.87,50.27,8.38
+2016,3,Gran Buenos Aires,Secundaria completa,71.47,65.74,8.03
+2016,3,Gran Buenos Aires,Superior / Univ. completo,79.73,77.24,3.13
+2016,3,Gran Buenos Aires,Superior / Univ. incompleto,77.72,70.63,9.12
+2016,4,CABA,Hasta secundaria incompleta,47.89,45.56,4.87
+2016,4,CABA,Secundaria completa,67.59,65.15,3.61
+2016,4,CABA,Superior / Univ. completo,83.45,80.94,3.01
+2016,4,CABA,Superior / Univ. incompleto,70.81,68.09,3.84
+2016,4,Gran Buenos Aires,Hasta secundaria incompleta,52.24,48.47,7.23
+2016,4,Gran Buenos Aires,Secundaria completa,71.14,66.45,6.6
+2016,4,Gran Buenos Aires,Superior / Univ. completo,79.92,78.71,1.51
+2016,4,Gran Buenos Aires,Superior / Univ. incompleto,76.11,67.64,11.13
+2017,1,CABA,Hasta secundaria incompleta,48.49,44.22,8.8
+2017,1,CABA,Secundaria completa,66.18,62.63,5.37
+2017,1,CABA,Superior / Univ. completo,81.93,79.24,3.28
+2017,1,CABA,Superior / Univ. incompleto,76.77,66.64,13.19
+2017,1,Gran Buenos Aires,Hasta secundaria incompleta,54.77,48.92,10.69
+2017,1,Gran Buenos Aires,Secundaria completa,71.88,66.5,7.48
+2017,1,Gran Buenos Aires,Superior / Univ. completo,81.12,77.41,4.58
+2017,1,Gran Buenos Aires,Superior / Univ. incompleto,76.46,69.77,8.76
+2017,2,CABA,Hasta secundaria incompleta,49.87,46.41,6.93
+2017,2,CABA,Secundaria completa,66.21,62.56,5.51
+2017,2,CABA,Superior / Univ. completo,80.09,77.31,3.47
+2017,2,CABA,Superior / Univ. incompleto,77.58,71.75,7.52
+2017,2,Gran Buenos Aires,Hasta secundaria incompleta,56.84,51.08,10.14
+2017,2,Gran Buenos Aires,Secundaria completa,68.92,63.65,7.64
+2017,2,Gran Buenos Aires,Superior / Univ. completo,78.31,75.76,3.26
+2017,2,Gran Buenos Aires,Superior / Univ. incompleto,76.97,71.95,6.52
+2017,3,CABA,Hasta secundaria incompleta,47.55,45.03,5.31
+2017,3,CABA,Secundaria completa,65.64,60.45,7.91
+2017,3,CABA,Superior / Univ. completo,80.38,76.87,4.37
+2017,3,CABA,Superior / Univ. incompleto,79.06,73.26,7.34
+2017,3,Gran Buenos Aires,Hasta secundaria incompleta,56.11,50.94,9.21
+2017,3,Gran Buenos Aires,Secundaria completa,71.0,67.14,5.43
+2017,3,Gran Buenos Aires,Superior / Univ. completo,76.06,73.77,3.01
+2017,3,Gran Buenos Aires,Superior / Univ. incompleto,76.91,73.28,4.72
+2017,4,CABA,Hasta secundaria incompleta,47.99,45.32,5.56
+2017,4,CABA,Secundaria completa,61.99,58.23,6.06
+2017,4,CABA,Superior / Univ. completo,81.08,78.28,3.46
+2017,4,CABA,Superior / Univ. incompleto,70.92,67.25,5.18
+2017,4,Gran Buenos Aires,Hasta secundaria incompleta,54.99,50.66,7.88
+2017,4,Gran Buenos Aires,Secundaria completa,69.5,65.35,5.98
+2017,4,Gran Buenos Aires,Superior / Univ. completo,78.24,75.59,3.39
+2017,4,Gran Buenos Aires,Superior / Univ. incompleto,78.04,72.99,6.47
+2018,1,CABA,Hasta secundaria incompleta,44.36,39.01,12.07
+2018,1,CABA,Secundaria completa,63.49,59.82,5.78
+2018,1,CABA,Superior / Univ. completo,80.88,77.66,3.99
+2018,1,CABA,Superior / Univ. incompleto,72.53,66.16,8.78
+2018,1,Gran Buenos Aires,Hasta secundaria incompleta,53.51,48.74,8.91
+2018,1,Gran Buenos Aires,Secundaria completa,72.62,66.31,8.69
+2018,1,Gran Buenos Aires,Superior / Univ. completo,80.8,77.63,3.92
+2018,1,Gran Buenos Aires,Superior / Univ. incompleto,78.95,72.05,8.74
+2018,2,CABA,Hasta secundaria incompleta,48.14,43.92,8.76
+2018,2,CABA,Secundaria completa,64.44,60.87,5.54
+2018,2,CABA,Superior / Univ. completo,82.85,79.41,4.15
+2018,2,CABA,Superior / Univ. incompleto,73.0,67.83,7.09
+2018,2,Gran Buenos Aires,Hasta secundaria incompleta,54.77,48.8,10.9
+2018,2,Gran Buenos Aires,Secundaria completa,72.06,65.74,8.78
+2018,2,Gran Buenos Aires,Superior / Univ. completo,79.18,75.52,4.63
+2018,2,Gran Buenos Aires,Superior / Univ. incompleto,77.71,70.84,8.83
+2018,3,CABA,Hasta secundaria incompleta,48.33,44.78,7.35
+2018,3,CABA,Secundaria completa,65.96,61.29,7.08
+2018,3,CABA,Superior / Univ. completo,80.39,77.33,3.8
+2018,3,CABA,Superior / Univ. incompleto,79.32,70.61,10.99
+2018,3,Gran Buenos Aires,Hasta secundaria incompleta,55.69,49.62,10.9
+2018,3,Gran Buenos Aires,Secundaria completa,71.0,64.02,9.83
+2018,3,Gran Buenos Aires,Superior / Univ. completo,81.73,79.58,2.64
+2018,3,Gran Buenos Aires,Superior / Univ. incompleto,77.83,71.67,7.91
+2018,4,CABA,Hasta secundaria incompleta,47.68,43.96,7.8
+2018,4,CABA,Secundaria completa,66.15,62.7,5.21
+2018,4,CABA,Superior / Univ. completo,79.61,77.06,3.21
+2018,4,CABA,Superior / Univ. incompleto,73.76,67.4,8.61
+2018,4,Gran Buenos Aires,Hasta secundaria incompleta,53.68,47.63,11.27
+2018,4,Gran Buenos Aires,Secundaria completa,71.61,64.38,10.09
+2018,4,Gran Buenos Aires,Superior / Univ. completo,79.38,77.33,2.58
+2018,4,Gran Buenos Aires,Superior / Univ. incompleto,76.77,70.43,8.25
+2019,1,CABA,Hasta secundaria incompleta,45.9,42.23,8.0
+2019,1,CABA,Secundaria completa,66.94,61.88,7.56
+2019,1,CABA,Superior / Univ. completo,83.48,81.13,2.82
+2019,1,CABA,Superior / Univ. incompleto,70.04,65.59,6.35
+2019,1,Gran Buenos Aires,Hasta secundaria incompleta,54.96,49.36,10.19
+2019,1,Gran Buenos Aires,Secundaria completa,69.78,62.91,9.84
+2019,1,Gran Buenos Aires,Superior / Univ. completo,82.16,78.68,4.23
+2019,1,Gran Buenos Aires,Superior / Univ. incompleto,77.99,70.26,9.92
+2019,2,CABA,Hasta secundaria incompleta,49.67,44.96,9.48
+2019,2,CABA,Secundaria completa,66.55,59.46,10.65
+2019,2,CABA,Superior / Univ. completo,82.97,79.39,4.32
+2019,2,CABA,Superior / Univ. incompleto,77.64,70.53,9.16
+2019,2,Gran Buenos Aires,Hasta secundaria incompleta,55.2,48.35,12.41
+2019,2,Gran Buenos Aires,Secundaria completa,73.66,65.02,11.73
+2019,2,Gran Buenos Aires,Superior / Univ. completo,79.12,76.48,3.33
+2019,2,Gran Buenos Aires,Superior / Univ. incompleto,76.39,69.63,8.86
+2019,3,CABA,Hasta secundaria incompleta,52.68,46.84,11.08
+2019,3,CABA,Secundaria completa,65.56,60.99,6.97
+2019,3,CABA,Superior / Univ. completo,84.33,80.61,4.42
+2019,3,CABA,Superior / Univ. incompleto,80.0,74.65,6.69
+2019,3,Gran Buenos Aires,Hasta secundaria incompleta,52.49,46.92,10.62
+2019,3,Gran Buenos Aires,Secundaria completa,69.46,62.09,10.61
+2019,3,Gran Buenos Aires,Superior / Univ. completo,80.68,78.49,2.71
+2019,3,Gran Buenos Aires,Superior / Univ. incompleto,78.52,71.2,9.32
+2019,4,CABA,Hasta secundaria incompleta,51.04,48.25,5.46
+2019,4,CABA,Secundaria completa,65.77,59.54,9.48
+2019,4,CABA,Superior / Univ. completo,79.61,77.47,2.68
+2019,4,CABA,Superior / Univ. incompleto,73.93,69.61,5.85
+2019,4,Gran Buenos Aires,Hasta secundaria incompleta,53.55,47.88,10.6
+2019,4,Gran Buenos Aires,Secundaria completa,70.17,64.43,8.18
+2019,4,Gran Buenos Aires,Superior / Univ. completo,81.4,78.15,3.99
+2019,4,Gran Buenos Aires,Superior / Univ. incompleto,80.59,73.54,8.75
+2020,1,CABA,Hasta secundaria incompleta,49.9,46.55,6.73
+2020,1,CABA,Secundaria completa,68.71,63.5,7.58
+2020,1,CABA,Superior / Univ. completo,78.6,76.26,2.98
+2020,1,CABA,Superior / Univ. incompleto,74.15,67.64,8.78
+2020,1,Gran Buenos Aires,Hasta secundaria incompleta,54.6,48.79,10.65
+2020,1,Gran Buenos Aires,Secundaria completa,69.67,62.31,10.57
+2020,1,Gran Buenos Aires,Superior / Univ. completo,78.3,75.07,4.13
+2020,1,Gran Buenos Aires,Superior / Univ. incompleto,77.29,70.42,8.89
+2020,2,CABA,Hasta secundaria incompleta,39.76,35.41,10.93
+2020,2,CABA,Secundaria completa,60.25,54.41,9.68
+2020,2,CABA,Superior / Univ. completo,78.01,74.96,3.91
+2020,2,CABA,Superior / Univ. incompleto,66.59,56.61,14.99
+2020,2,Gran Buenos Aires,Hasta secundaria incompleta,42.15,35.52,15.73
+2020,2,Gran Buenos Aires,Secundaria completa,57.3,51.58,9.98
+2020,2,Gran Buenos Aires,Superior / Univ. completo,77.33,74.5,3.66
+2020,2,Gran Buenos Aires,Superior / Univ. incompleto,66.4,58.35,12.11
+2020,3,CABA,Hasta secundaria incompleta,47.75,41.64,12.8
+2020,3,CABA,Secundaria completa,59.96,53.28,11.15
+2020,3,CABA,Superior / Univ. completo,80.23,75.75,5.57
+2020,3,CABA,Superior / Univ. incompleto,67.41,59.14,12.26
+2020,3,Gran Buenos Aires,Hasta secundaria incompleta,46.88,39.51,15.71
+2020,3,Gran Buenos Aires,Secundaria completa,61.02,53.26,12.71
+2020,3,Gran Buenos Aires,Superior / Univ. completo,76.75,73.04,4.84
+2020,3,Gran Buenos Aires,Superior / Univ. incompleto,75.4,68.51,9.14
+2020,4,CABA,Hasta secundaria incompleta,53.66,50.56,5.77
+2020,4,CABA,Secundaria completa,62.5,57.08,8.67
+2020,4,CABA,Superior / Univ. completo,78.94,75.84,3.93
+2020,4,CABA,Superior / Univ. incompleto,74.17,66.47,10.39
+2020,4,Gran Buenos Aires,Hasta secundaria incompleta,58.98,52.29,11.34
+2020,4,Gran Buenos Aires,Secundaria completa,60.94,56.11,7.92
+2020,4,Gran Buenos Aires,Superior / Univ. completo,76.83,70.49,8.25
+2020,4,Gran Buenos Aires,Superior / Univ. incompleto,78.24,75.79,3.13
+2021,1,CABA,Hasta secundaria incompleta,47.64,43.56,8.56
+2021,1,CABA,Secundaria completa,51.01,45.92,9.98
+2021,1,CABA,Superior / Univ. completo,78.71,74.76,5.01
+2021,1,CABA,Superior / Univ. incompleto,72.78,68.38,6.04
+2021,1,Gran Buenos Aires,Hasta secundaria incompleta,55.96,50.56,9.65
+2021,1,Gran Buenos Aires,Secundaria completa,67.58,59.72,11.63
+2021,1,Gran Buenos Aires,Superior / Univ. completo,82.84,79.47,4.07
+2021,1,Gran Buenos Aires,Superior / Univ. incompleto,78.99,71.94,8.92
+2021,2,CABA,Hasta secundaria incompleta,49.27,42.13,14.49
+2021,2,CABA,Secundaria completa,60.91,51.44,15.54
+2021,2,CABA,Superior / Univ. completo,80.38,77.27,3.86
+2021,2,CABA,Superior / Univ. incompleto,71.97,66.93,7.01
+2021,2,Gran Buenos Aires,Hasta secundaria incompleta,52.57,48.27,8.18
+2021,2,Gran Buenos Aires,Secundaria completa,69.39,63.54,8.44
+2021,2,Gran Buenos Aires,Superior / Univ. completo,76.85,73.29,4.64
+2021,2,Gran Buenos Aires,Superior / Univ. incompleto,76.37,66.43,13.02
+2021,3,CABA,Hasta secundaria incompleta,53.57,47.52,11.31
+2021,3,CABA,Secundaria completa,65.84,64.11,2.63
+2021,3,CABA,Superior / Univ. completo,81.49,80.3,1.45
+2021,3,CABA,Superior / Univ. incompleto,78.33,68.12,13.04
+2021,3,Gran Buenos Aires,Hasta secundaria incompleta,56.53,51.27,9.3
+2021,3,Gran Buenos Aires,Secundaria completa,69.28,63.67,8.1
+2021,3,Gran Buenos Aires,Superior / Univ. completo,75.81,74.11,2.25
+2021,3,Gran Buenos Aires,Superior / Univ. incompleto,80.45,74.01,8.0
+2021,4,CABA,Hasta secundaria incompleta,51.88,46.61,10.15
+2021,4,CABA,Secundaria completa,65.62,62.85,4.23
+2021,4,CABA,Superior / Univ. completo,77.9,76.82,1.39
+2021,4,CABA,Superior / Univ. incompleto,79.25,76.45,3.53
+2021,4,Gran Buenos Aires,Hasta secundaria incompleta,56.81,52.37,7.82
+2021,4,Gran Buenos Aires,Secundaria completa,69.61,65.32,6.16
+2021,4,Gran Buenos Aires,Superior / Univ. completo,80.74,78.82,2.37
+2021,4,Gran Buenos Aires,Superior / Univ. incompleto,80.94,75.44,6.8
+2022,1,CABA,Hasta secundaria incompleta,48.95,47.28,3.41
+2022,1,CABA,Secundaria completa,56.4,53.77,4.67
+2022,1,CABA,Superior / Univ. completo,80.67,77.57,3.85
+2022,1,CABA,Superior / Univ. incompleto,79.31,76.12,4.03
+2022,1,Gran Buenos Aires,Hasta secundaria incompleta,53.95,50.57,6.27
+2022,1,Gran Buenos Aires,Secundaria completa,70.89,65.83,7.14
+2022,1,Gran Buenos Aires,Superior / Univ. completo,80.07,76.46,4.5
+2022,1,Gran Buenos Aires,Superior / Univ. incompleto,76.44,73.37,4.02
+2022,2,CABA,Hasta secundaria incompleta,52.11,49.9,4.23
+2022,2,CABA,Secundaria completa,58.16,56.55,2.77
+2022,2,CABA,Superior / Univ. completo,80.53,77.38,3.91
+2022,2,CABA,Superior / Univ. incompleto,79.04,71.5,9.54
+2022,2,Gran Buenos Aires,Hasta secundaria incompleta,56.83,53.26,6.3
+2022,2,Gran Buenos Aires,Secundaria completa,75.47,68.72,8.94
+2022,2,Gran Buenos Aires,Superior / Univ. completo,80.52,77.82,3.35
+2022,2,Gran Buenos Aires,Superior / Univ. incompleto,80.4,74.99,6.73
+2022,3,CABA,Hasta secundaria incompleta,50.72,48.12,5.13
+2022,3,CABA,Secundaria completa,61.35,57.98,5.5
+2022,3,CABA,Superior / Univ. completo,81.1,79.29,2.22
+2022,3,CABA,Superior / Univ. incompleto,80.48,78.55,2.4
+2022,3,Gran Buenos Aires,Hasta secundaria incompleta,57.77,53.91,6.68
+2022,3,Gran Buenos Aires,Secundaria completa,71.36,65.59,8.08
+2022,3,Gran Buenos Aires,Superior / Univ. completo,79.12,76.72,3.03
+2022,3,Gran Buenos Aires,Superior / Univ. incompleto,79.4,75.16,5.33
+2022,4,CABA,Hasta secundaria incompleta,57.36,55.05,4.03
+2022,4,CABA,Secundaria completa,61.09,60.33,1.24
+2022,4,CABA,Superior / Univ. completo,82.37,80.75,1.97
+2022,4,CABA,Superior / Univ. incompleto,79.28,76.92,2.98
+2022,4,Gran Buenos Aires,Hasta secundaria incompleta,56.97,53.06,6.87
+2022,4,Gran Buenos Aires,Secundaria completa,70.55,66.48,5.76
+2022,4,Gran Buenos Aires,Superior / Univ. completo,78.66,77.19,1.86
+2022,4,Gran Buenos Aires,Superior / Univ. incompleto,80.11,74.16,7.44
+2023,1,CABA,Hasta secundaria incompleta,59.21,56.17,5.12
+2023,1,CABA,Secundaria completa,62.68,59.91,4.41
+2023,1,CABA,Superior / Univ. completo,78.94,77.75,1.5
+2023,1,CABA,Superior / Univ. incompleto,79.6,76.25,4.21
+2023,1,Gran Buenos Aires,Hasta secundaria incompleta,56.13,52.29,6.84
+2023,1,Gran Buenos Aires,Secundaria completa,74.77,70.52,5.68
+2023,1,Gran Buenos Aires,Superior / Univ. completo,80.88,76.27,5.69
+2023,1,Gran Buenos Aires,Superior / Univ. incompleto,78.44,73.21,6.67
+2023,2,CABA,Hasta secundaria incompleta,54.35,53.8,1.0
+2023,2,CABA,Secundaria completa,66.37,63.67,4.08
+2023,2,CABA,Superior / Univ. completo,80.6,78.32,2.83
+2023,2,CABA,Superior / Univ. incompleto,76.85,74.06,3.63
+2023,2,Gran Buenos Aires,Hasta secundaria incompleta,55.97,52.24,6.67
+2023,2,Gran Buenos Aires,Secundaria completa,72.45,68.08,6.03
+2023,2,Gran Buenos Aires,Superior / Univ. completo,79.02,76.29,3.46
+2023,2,Gran Buenos Aires,Superior / Univ. incompleto,77.69,73.44,5.47
+2023,3,CABA,Hasta secundaria incompleta,51.49,49.82,3.25
+2023,3,CABA,Secundaria completa,68.09,65.7,3.52
+2023,3,CABA,Superior / Univ. completo,79.83,77.65,2.73
+2023,3,CABA,Superior / Univ. incompleto,79.04,78.01,1.3
+2023,3,Gran Buenos Aires,Hasta secundaria incompleta,56.13,53.68,4.36
+2023,3,Gran Buenos Aires,Secundaria completa,69.97,65.24,6.76
+2023,3,Gran Buenos Aires,Superior / Univ. completo,82.89,81.99,1.09
+2023,3,Gran Buenos Aires,Superior / Univ. incompleto,78.6,74.5,5.21
+2023,4,CABA,Hasta secundaria incompleta,55.56,54.31,2.25
+2023,4,CABA,Secundaria completa,66.22,64.02,3.32
+2023,4,CABA,Superior / Univ. completo,82.16,80.82,1.64
+2023,4,CABA,Superior / Univ. incompleto,82.68,81.49,1.44
+2023,4,Gran Buenos Aires,Hasta secundaria incompleta,55.99,52.64,5.98
+2023,4,Gran Buenos Aires,Secundaria completa,73.45,68.92,6.17
+2023,4,Gran Buenos Aires,Superior / Univ. completo,82.99,82.18,0.97
+2023,4,Gran Buenos Aires,Superior / Univ. incompleto,74.94,69.93,6.69
+2024,1,CABA,Hasta secundaria incompleta,55.95,52.5,6.17
+2024,1,CABA,Secundaria completa,68.05,64.24,5.6
+2024,1,CABA,Superior / Univ. completo,78.86,77.01,2.34
+2024,1,CABA,Superior / Univ. incompleto,77.73,74.16,4.6
+2024,1,Gran Buenos Aires,Hasta secundaria incompleta,53.28,47.98,9.95
+2024,1,Gran Buenos Aires,Secundaria completa,75.92,69.65,8.26
+2024,1,Gran Buenos Aires,Superior / Univ. completo,78.67,75.94,3.46
+2024,1,Gran Buenos Aires,Superior / Univ. incompleto,76.0,70.56,7.16
+2024,2,CABA,Hasta secundaria incompleta,64.45,61.22,5.01
+2024,2,CABA,Secundaria completa,63.86,59.68,6.55
+2024,2,CABA,Superior / Univ. completo,80.74,79.24,1.85
+2024,2,CABA,Superior / Univ. incompleto,68.27,64.85,5.01
+2024,2,Gran Buenos Aires,Hasta secundaria incompleta,56.6,51.57,8.88
+2024,2,Gran Buenos Aires,Secundaria completa,75.53,68.97,8.69
+2024,2,Gran Buenos Aires,Superior / Univ. completo,80.53,78.02,3.12
+2024,2,Gran Buenos Aires,Superior / Univ. incompleto,77.61,72.91,6.06
+2024,3,CABA,Hasta secundaria incompleta,39.9,37.25,6.65
+2024,3,CABA,Secundaria completa,66.61,64.24,3.56
+2024,3,CABA,Superior / Univ. completo,82.48,79.82,3.23
+2024,3,CABA,Superior / Univ. incompleto,78.06,76.04,2.58
+2024,3,Gran Buenos Aires,Hasta secundaria incompleta,54.93,51.06,7.04
+2024,3,Gran Buenos Aires,Secundaria completa,73.33,68.04,7.2
+2024,3,Gran Buenos Aires,Superior / Univ. completo,82.33,79.75,3.13
+2024,3,Gran Buenos Aires,Superior / Univ. incompleto,79.73,75.07,5.84
+2024,4,CABA,Hasta secundaria incompleta,48.74,45.86,5.91
+2024,4,CABA,Secundaria completa,65.53,63.08,3.74
+2024,4,CABA,Superior / Univ. completo,82.63,81.31,1.6
+2024,4,CABA,Superior / Univ. incompleto,79.46,76.11,4.22
+2024,4,Gran Buenos Aires,Hasta secundaria incompleta,58.91,54.21,7.97
+2024,4,Gran Buenos Aires,Secundaria completa,71.25,66.54,6.62
+2024,4,Gran Buenos Aires,Superior / Univ. completo,81.98,79.83,2.62
+2024,4,Gran Buenos Aires,Superior / Univ. incompleto,78.47,73.94,5.77
+2025,1,CABA,Hasta secundaria incompleta,54.31,47.44,12.66
+2025,1,CABA,Secundaria completa,62.84,58.55,6.82
+2025,1,CABA,Superior / Univ. completo,80.52,77.71,3.49
+2025,1,CABA,Superior / Univ. incompleto,79.94,76.89,3.81
+2025,1,Gran Buenos Aires,Hasta secundaria incompleta,58.2,52.97,8.99
+2025,1,Gran Buenos Aires,Secundaria completa,72.36,66.51,8.09
+2025,1,Gran Buenos Aires,Superior / Univ. completo,78.69,76.06,3.34
+2025,1,Gran Buenos Aires,Superior / Univ. incompleto,75.94,70.63,6.99
+2025,2,CABA,Hasta secundaria incompleta,56.75,55.46,2.29
+2025,2,CABA,Secundaria completa,65.81,63.63,3.3
+2025,2,CABA,Superior / Univ. completo,78.35,76.54,2.31
+2025,2,CABA,Superior / Univ. incompleto,79.89,76.67,4.03
+2025,2,Gran Buenos Aires,Hasta secundaria incompleta,56.39,50.14,11.08
+2025,2,Gran Buenos Aires,Secundaria completa,72.36,67.27,7.03
+2025,2,Gran Buenos Aires,Superior / Univ. completo,79.01,75.89,3.95
+2025,2,Gran Buenos Aires,Superior / Univ. incompleto,78.83,72.91,7.52
+2025,3,CABA,Hasta secundaria incompleta,49.36,47.68,3.39
+2025,3,CABA,Secundaria completa,71.85,70.23,2.25
+2025,3,CABA,Superior / Univ. completo,80.12,77.94,2.72
+2025,3,CABA,Superior / Univ. incompleto,81.03,75.98,6.23
+2025,3,Gran Buenos Aires,Hasta secundaria incompleta,57.48,53.33,7.21
+2025,3,Gran Buenos Aires,Secundaria completa,73.67,69.19,6.07
+2025,3,Gran Buenos Aires,Superior / Univ. completo,80.87,77.91,3.67
+2025,3,Gran Buenos Aires,Superior / Univ. incompleto,77.08,72.84,5.5
+2025,4,CABA,Hasta secundaria incompleta,47.77,46.16,3.37
+2025,4,CABA,Secundaria completa,63.98,62.37,2.5
+2025,4,CABA,Superior / Univ. completo,82.59,80.74,2.25
+2025,4,CABA,Superior / Univ. incompleto,76.5,71.48,6.56
+2025,4,Gran Buenos Aires,Hasta secundaria incompleta,57.06,52.15,8.62
+2025,4,Gran Buenos Aires,Secundaria completa,70.9,66.04,6.85
+2025,4,Gran Buenos Aires,Superior / Univ. completo,82.72,79.14,4.33
+2025,4,Gran Buenos Aires,Superior / Univ. incompleto,82.99,73.65,11.26
+2026,1,CABA,Hasta secundaria incompleta,52.98,46.49,12.26
+2026,1,CABA,Secundaria completa,58.22,56.04,3.75
+2026,1,CABA,Superior / Univ. completo,81.87,80.75,1.37
+2026,1,CABA,Superior / Univ. incompleto,70.43,68.14,3.25
+2026,1,Gran Buenos Aires,Hasta secundaria incompleta,56.6,51.46,9.07
+2026,1,Gran Buenos Aires,Secundaria completa,73.21,67.18,8.24
+2026,1,Gran Buenos Aires,Superior / Univ. completo,75.36,71.18,5.54
+2026,1,Gran Buenos Aires,Superior / Univ. incompleto,80.94,75.25,7.04
+2026,2,CABA,Hasta secundaria incompleta,58.96,54.95,6.8
+2026,2,CABA,Secundaria completa,66.29,64.37,2.9
+2026,2,CABA,Superior / Univ. completo,81.36,79.39,2.42
+2026,2,CABA,Superior / Univ. incompleto,72.86,65.41,10.23
+2026,2,Gran Buenos Aires,Hasta secundaria incompleta,56.46,50.82,9.98
+2026,2,Gran Buenos Aires,Secundaria completa,74.16,68.71,7.36
+2026,2,Gran Buenos Aires,Superior / Univ. completo,80.49,76.88,4.49
+2026,2,Gran Buenos Aires,Superior / Univ. incompleto,75.51,71.27,5.62

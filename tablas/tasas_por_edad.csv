@@ -1,67 +1,247 @@
-﻿ANO4,AGLO,GRUPO_EDAD,Actividad,Empleo,Desocupación
-2016,CABA,15 a 29 años,59.21,47.99,18.96
-2016,CABA,30 a 49 años,90.61,86.39,4.66
-2016,CABA,50 años y más,51.03,49.23,3.52
-2016,Gran Buenos Aires,15 a 29 años,53.24,42.47,20.24
-2016,Gran Buenos Aires,30 a 49 años,80.98,75.48,6.79
-2016,Gran Buenos Aires,50 años y más,44.89,42.23,5.93
-2017,CABA,15 a 29 años,57.93,49.56,14.45
-2017,CABA,30 a 49 años,89.99,85.37,5.13
-2017,CABA,50 años y más,50.63,48.26,4.68
-2017,Gran Buenos Aires,15 a 29 años,53.94,43.29,19.74
-2017,Gran Buenos Aires,30 a 49 años,81.47,75.43,7.41
-2017,Gran Buenos Aires,50 años y más,46.35,43.65,5.84
-2018,CABA,15 a 29 años,58.03,47.35,18.41
-2018,CABA,30 a 49 años,90.51,85.66,5.36
-2018,CABA,50 años y más,49.09,46.54,5.19
-2018,Gran Buenos Aires,15 a 29 años,54.0,42.55,21.21
-2018,Gran Buenos Aires,30 a 49 años,82.41,75.46,8.44
-2018,Gran Buenos Aires,50 años y más,45.88,42.71,6.9
-2019,CABA,15 a 29 años,59.44,49.37,16.95
-2019,CABA,30 a 49 años,93.02,87.7,5.72
-2019,CABA,50 años y más,51.36,48.81,4.96
-2019,Gran Buenos Aires,15 a 29 años,53.84,41.46,22.99
-2019,Gran Buenos Aires,30 a 49 años,81.94,74.88,8.62
-2019,Gran Buenos Aires,50 años y más,46.14,42.93,6.96
-2020,CABA,15 a 29 años,50.57,39.92,21.07
-2020,CABA,30 a 49 años,88.19,81.49,7.6
-2020,CABA,50 años y más,46.49,44.66,3.92
-2020,Gran Buenos Aires,15 a 29 años,45.61,33.85,25.78
-2020,Gran Buenos Aires,30 a 49 años,75.35,68.7,8.83
-2020,Gran Buenos Aires,50 años y más,41.85,37.56,10.24
-2021,CABA,15 a 29 años,51.97,43.28,16.72
-2021,CABA,30 a 49 años,90.9,86.84,4.47
-2021,CABA,50 años y más,48.7,46.11,5.32
-2021,Gran Buenos Aires,15 a 29 años,50.71,40.64,19.85
-2021,Gran Buenos Aires,30 a 49 años,82.49,76.65,7.07
-2021,Gran Buenos Aires,50 años y más,46.27,43.48,6.02
-2022,CABA,15 a 29 años,56.64,50.17,11.44
-2022,CABA,30 a 49 años,92.09,89.47,2.84
-2022,CABA,50 años y más,46.98,45.45,3.25
-2022,Gran Buenos Aires,15 a 29 años,52.84,44.1,16.53
-2022,Gran Buenos Aires,30 a 49 años,83.65,79.21,5.31
-2022,Gran Buenos Aires,50 años y más,47.19,44.36,6.0
-2023,CABA,15 a 29 años,57.01,51.0,10.54
-2023,CABA,30 a 49 años,92.1,89.89,2.39
-2023,CABA,50 años y más,49.94,48.76,2.36
-2023,Gran Buenos Aires,15 a 29 años,53.85,45.5,15.51
-2023,Gran Buenos Aires,30 a 49 años,84.2,79.75,5.28
-2023,Gran Buenos Aires,50 años y más,47.37,45.56,3.82
-2024,CABA,15 a 29 años,53.42,47.6,10.89
-2024,CABA,30 a 49 años,92.16,89.46,2.92
-2024,CABA,50 años y más,53.62,51.57,3.82
-2024,Gran Buenos Aires,15 a 29 años,54.63,45.17,17.32
-2024,Gran Buenos Aires,30 a 49 años,84.55,79.53,5.93
-2024,Gran Buenos Aires,50 años y más,48.96,46.03,5.99
-2025,CABA,15 a 29 años,54.65,48.53,11.19
-2025,CABA,30 a 49 años,92.66,89.39,3.53
-2025,CABA,50 años y más,53.06,51.21,3.49
-2025,Gran Buenos Aires,15 a 29 años,53.9,44.34,17.74
-2025,Gran Buenos Aires,30 a 49 años,83.07,77.68,6.49
-2025,Gran Buenos Aires,50 años y más,49.4,46.51,5.84
-2026,CABA,15 a 29 años,56.55,49.3,12.83
-2026,CABA,30 a 49 años,91.49,88.56,3.2
-2026,CABA,50 años y más,53.94,52.03,3.55
-2026,Gran Buenos Aires,15 a 29 años,52.94,44.33,16.27
-2026,Gran Buenos Aires,30 a 49 años,83.08,77.1,7.2
-2026,Gran Buenos Aires,50 años y más,48.74,45.54,6.57
+﻿ANO4,TRIMESTRE,AGLO,GRUPO_EDAD,Actividad,Empleo,Desocupación
+2016,2,CABA,15 a 29 años,58.4,46.66,20.09
+2016,2,CABA,30 a 49 años,91.17,85.57,6.14
+2016,2,CABA,50 años y más,52.49,50.36,4.08
+2016,2,Gran Buenos Aires,15 a 29 años,53.55,42.42,20.78
+2016,2,Gran Buenos Aires,30 a 49 años,81.33,75.26,7.46
+2016,2,Gran Buenos Aires,50 años y más,45.29,42.2,6.83
+2016,3,CABA,15 a 29 años,60.37,47.61,21.14
+2016,3,CABA,30 a 49 años,90.42,86.21,4.66
+2016,3,CABA,50 años y más,50.74,49.14,3.16
+2016,3,Gran Buenos Aires,15 a 29 años,54.61,43.49,20.35
+2016,3,Gran Buenos Aires,30 a 49 años,80.58,74.62,7.4
+2016,3,Gran Buenos Aires,50 años y más,45.69,43.12,5.63
+2016,4,CABA,15 a 29 años,58.84,49.9,15.2
+2016,4,CABA,30 a 49 años,90.25,87.34,3.23
+2016,4,CABA,50 años y más,49.84,48.19,3.32
+2016,4,Gran Buenos Aires,15 a 29 años,51.59,41.5,19.55
+2016,4,Gran Buenos Aires,30 a 49 años,81.02,76.55,5.52
+2016,4,Gran Buenos Aires,50 años y más,43.75,41.4,5.37
+2017,1,CABA,15 a 29 años,58.71,48.61,17.21
+2017,1,CABA,30 a 49 años,90.13,85.24,5.43
+2017,1,CABA,50 años y más,52.07,49.44,5.04
+2017,1,Gran Buenos Aires,15 a 29 años,53.55,42.16,21.25
+2017,1,Gran Buenos Aires,30 a 49 años,80.78,74.4,7.89
+2017,1,Gran Buenos Aires,50 años y más,46.5,42.82,7.9
+2017,2,CABA,15 a 29 años,54.65,46.85,14.27
+2017,2,CABA,30 a 49 años,89.22,83.92,5.94
+2017,2,CABA,50 años y más,53.62,51.55,3.86
+2017,2,Gran Buenos Aires,15 a 29 años,51.87,41.41,20.16
+2017,2,Gran Buenos Aires,30 a 49 años,81.42,74.71,8.25
+2017,2,Gran Buenos Aires,50 años y más,46.19,43.59,5.63
+2017,3,CABA,15 a 29 años,58.47,50.29,13.98
+2017,3,CABA,30 a 49 años,89.85,84.87,5.53
+2017,3,CABA,50 años y más,49.84,47.22,5.26
+2017,3,Gran Buenos Aires,15 a 29 años,55.56,44.15,20.54
+2017,3,Gran Buenos Aires,30 a 49 años,82.05,76.44,6.84
+2017,3,Gran Buenos Aires,50 años y más,46.56,44.22,5.02
+2017,4,CABA,15 a 29 años,60.21,52.82,12.26
+2017,4,CABA,30 a 49 años,90.7,87.36,3.69
+2017,4,CABA,50 años y más,46.84,44.66,4.65
+2017,4,Gran Buenos Aires,15 a 29 años,54.85,45.5,17.04
+2017,4,Gran Buenos Aires,30 a 49 años,81.62,76.17,6.68
+2017,4,Gran Buenos Aires,50 años y más,46.17,43.9,4.91
+2018,1,CABA,15 a 29 años,61.12,50.16,17.93
+2018,1,CABA,30 a 49 años,91.67,85.95,6.24
+2018,1,CABA,50 años y más,47.87,44.85,6.31
+2018,1,Gran Buenos Aires,15 a 29 años,54.68,43.21,20.97
+2018,1,Gran Buenos Aires,30 a 49 años,81.84,75.39,7.89
+2018,1,Gran Buenos Aires,50 años y más,45.86,42.78,6.71
+2018,2,CABA,15 a 29 años,58.65,47.44,19.11
+2018,2,CABA,30 a 49 años,91.0,86.23,5.24
+2018,2,CABA,50 años y más,49.07,46.98,4.26
+2018,2,Gran Buenos Aires,15 a 29 años,54.51,41.94,23.06
+2018,2,Gran Buenos Aires,30 a 49 años,83.01,75.6,8.93
+2018,2,Gran Buenos Aires,50 años y más,45.5,42.17,7.31
+2018,3,CABA,15 a 29 años,55.73,44.6,19.96
+2018,3,CABA,30 a 49 años,90.22,85.19,5.58
+2018,3,CABA,50 años y más,49.62,46.8,5.69
+2018,3,Gran Buenos Aires,15 a 29 años,53.2,42.9,19.37
+2018,3,Gran Buenos Aires,30 a 49 años,83.01,76.07,8.36
+2018,3,Gran Buenos Aires,50 años y más,46.57,43.11,7.42
+2018,4,CABA,15 a 29 años,56.86,47.37,16.69
+2018,4,CABA,30 a 49 años,89.18,85.27,4.38
+2018,4,CABA,50 años y más,49.87,47.65,4.45
+2018,4,Gran Buenos Aires,15 a 29 años,53.6,42.14,21.38
+2018,4,Gran Buenos Aires,30 a 49 años,81.76,74.75,8.57
+2018,4,Gran Buenos Aires,50 años y más,45.58,42.78,6.14
+2019,1,CABA,15 a 29 años,61.55,51.69,16.02
+2019,1,CABA,30 a 49 años,91.99,86.75,5.69
+2019,1,CABA,50 años y más,49.36,47.72,3.32
+2019,1,Gran Buenos Aires,15 a 29 años,55.56,42.28,23.91
+2019,1,Gran Buenos Aires,30 a 49 años,81.28,74.8,7.98
+2019,1,Gran Buenos Aires,50 años y más,46.63,43.04,7.7
+2019,2,CABA,15 a 29 años,61.07,49.5,18.94
+2019,2,CABA,30 a 49 años,92.37,85.38,7.56
+2019,2,CABA,50 años y más,53.1,50.42,5.05
+2019,2,Gran Buenos Aires,15 a 29 años,53.8,41.5,22.86
+2019,2,Gran Buenos Aires,30 a 49 años,83.86,75.92,9.47
+2019,2,Gran Buenos Aires,50 años y más,46.54,42.68,8.3
+2019,3,CABA,15 a 29 años,59.02,49.81,15.61
+2019,3,CABA,30 a 49 años,94.58,89.94,4.91
+2019,3,CABA,50 años y más,52.14,48.31,7.34
+2019,3,Gran Buenos Aires,15 a 29 años,52.95,39.89,24.67
+2019,3,Gran Buenos Aires,30 a 49 años,80.97,73.51,9.22
+2019,3,Gran Buenos Aires,50 años y más,45.18,42.91,5.01
+2019,4,CABA,15 a 29 años,55.99,46.42,17.1
+2019,4,CABA,30 a 49 años,93.11,88.65,4.79
+2019,4,CABA,50 años y más,50.76,48.74,3.98
+2019,4,Gran Buenos Aires,15 a 29 años,53.04,42.13,20.56
+2019,4,Gran Buenos Aires,30 a 49 años,81.68,75.33,7.78
+2019,4,Gran Buenos Aires,50 años y más,46.2,43.1,6.71
+2020,1,CABA,15 a 29 años,61.3,48.19,21.38
+2020,1,CABA,30 a 49 años,92.88,87.67,5.6
+2020,1,CABA,50 años y más,50.26,48.11,4.28
+2020,1,Gran Buenos Aires,15 a 29 años,52.63,40.02,23.97
+2020,1,Gran Buenos Aires,30 a 49 años,81.14,75.21,7.31
+2020,1,Gran Buenos Aires,50 años y más,46.07,41.68,9.53
+2020,2,CABA,15 a 29 años,51.73,39.66,23.33
+2020,2,CABA,30 a 49 años,82.66,75.46,8.71
+2020,2,CABA,50 años y más,40.6,38.31,5.65
+2020,2,Gran Buenos Aires,15 a 29 años,34.28,25.12,26.73
+2020,2,Gran Buenos Aires,30 a 49 años,69.47,62.07,10.65
+2020,2,Gran Buenos Aires,50 años y más,34.46,31.43,8.8
+2020,3,CABA,15 a 29 años,45.01,34.85,22.57
+2020,3,CABA,30 a 49 años,86.86,78.21,9.96
+2020,3,CABA,50 años y más,44.15,42.58,3.55
+2020,3,Gran Buenos Aires,15 a 29 años,44.02,32.83,25.42
+2020,3,Gran Buenos Aires,30 a 49 años,73.05,65.8,9.93
+2020,3,Gran Buenos Aires,50 años y más,40.13,34.7,13.55
+2020,4,CABA,15 a 29 años,44.84,37.19,17.06
+2020,4,CABA,30 a 49 años,90.6,84.94,6.25
+2020,4,CABA,50 años y más,50.04,48.8,2.47
+2020,4,Gran Buenos Aires,15 a 29 años,50.54,36.84,27.11
+2020,4,Gran Buenos Aires,30 a 49 años,78.61,72.71,7.51
+2020,4,Gran Buenos Aires,50 años y más,45.85,41.65,9.15
+2021,1,CABA,15 a 29 años,51.08,41.44,18.87
+2021,1,CABA,30 a 49 años,86.99,83.25,4.3
+2021,1,CABA,50 años y más,47.75,44.59,6.62
+2021,1,Gran Buenos Aires,15 a 29 años,50.22,38.42,23.49
+2021,1,Gran Buenos Aires,30 a 49 años,82.05,75.21,8.34
+2021,1,Gran Buenos Aires,50 años y más,47.71,44.16,7.44
+2021,2,CABA,15 a 29 años,53.74,44.2,17.76
+2021,2,CABA,30 a 49 años,90.96,84.71,6.88
+2021,2,CABA,50 años y más,46.87,43.73,6.7
+2021,2,Gran Buenos Aires,15 a 29 años,49.25,39.13,20.55
+2021,2,Gran Buenos Aires,30 a 49 años,80.8,74.97,7.21
+2021,2,Gran Buenos Aires,50 años y más,44.23,41.08,7.11
+2021,3,CABA,15 a 29 años,52.02,42.78,17.76
+2021,3,CABA,30 a 49 años,93.24,89.38,4.13
+2021,3,CABA,50 años y más,49.92,47.42,5.0
+2021,3,Gran Buenos Aires,15 a 29 años,51.48,41.47,19.45
+2021,3,Gran Buenos Aires,30 a 49 años,82.63,77.31,6.44
+2021,3,Gran Buenos Aires,50 años y más,47.87,45.19,5.61
+2021,4,CABA,15 a 29 años,51.02,44.69,12.41
+2021,4,CABA,30 a 49 años,92.39,90.0,2.59
+2021,4,CABA,50 años y más,50.26,48.69,3.13
+2021,4,Gran Buenos Aires,15 a 29 años,51.89,43.55,16.08
+2021,4,Gran Buenos Aires,30 a 49 años,84.47,79.11,6.35
+2021,4,Gran Buenos Aires,50 años y más,45.18,43.41,3.92
+2022,1,CABA,15 a 29 años,56.09,50.74,9.54
+2022,1,CABA,30 a 49 años,90.06,86.73,3.69
+2022,1,CABA,50 años y más,46.74,45.18,3.33
+2022,1,Gran Buenos Aires,15 a 29 años,49.71,42.1,15.31
+2022,1,Gran Buenos Aires,30 a 49 años,82.76,78.24,5.47
+2022,1,Gran Buenos Aires,50 años y más,45.18,42.51,5.91
+2022,2,CABA,15 a 29 años,59.93,52.7,12.06
+2022,2,CABA,30 a 49 años,90.72,86.9,4.21
+2022,2,CABA,50 años y más,45.76,44.63,2.46
+2022,2,Gran Buenos Aires,15 a 29 años,52.51,44.09,16.03
+2022,2,Gran Buenos Aires,30 a 49 años,84.48,80.24,5.02
+2022,2,Gran Buenos Aires,50 años y más,49.17,45.41,7.65
+2022,3,CABA,15 a 29 años,55.03,48.18,12.44
+2022,3,CABA,30 a 49 años,93.3,91.3,2.15
+2022,3,CABA,50 años y más,46.4,44.58,3.92
+2022,3,Gran Buenos Aires,15 a 29 años,56.16,45.41,19.15
+2022,3,Gran Buenos Aires,30 a 49 años,83.2,78.73,5.37
+2022,3,Gran Buenos Aires,50 años y más,47.42,44.76,5.62
+2022,4,CABA,15 a 29 años,55.52,49.04,11.68
+2022,4,CABA,30 a 49 años,94.23,92.89,1.42
+2022,4,CABA,50 años y más,49.01,47.41,3.27
+2022,4,Gran Buenos Aires,15 a 29 años,52.96,44.8,15.41
+2022,4,Gran Buenos Aires,30 a 49 años,84.14,79.61,5.38
+2022,4,Gran Buenos Aires,50 años y más,46.99,44.73,4.82
+2023,1,CABA,15 a 29 años,58.77,50.03,14.88
+2023,1,CABA,30 a 49 años,91.92,89.1,3.07
+2023,1,CABA,50 años y más,50.33,49.05,2.53
+2023,1,Gran Buenos Aires,15 a 29 años,53.98,44.92,16.77
+2023,1,Gran Buenos Aires,30 a 49 años,84.31,79.29,5.95
+2023,1,Gran Buenos Aires,50 años y más,48.15,46.06,4.33
+2023,2,CABA,15 a 29 años,54.57,49.58,9.14
+2023,2,CABA,30 a 49 años,92.48,90.62,2.01
+2023,2,CABA,50 años y más,48.74,46.9,3.78
+2023,2,Gran Buenos Aires,15 a 29 años,50.65,42.83,15.43
+2023,2,Gran Buenos Aires,30 a 49 años,83.33,78.6,5.68
+2023,2,Gran Buenos Aires,50 años y más,46.77,45.17,3.42
+2023,3,CABA,15 a 29 años,59.62,55.09,7.61
+2023,3,CABA,30 a 49 años,92.41,89.55,3.1
+2023,3,CABA,50 años y más,48.54,47.75,1.63
+2023,3,Gran Buenos Aires,15 a 29 años,54.09,45.92,15.1
+2023,3,Gran Buenos Aires,30 a 49 años,83.92,79.75,4.97
+2023,3,Gran Buenos Aires,50 años y más,47.33,46.29,2.2
+2023,4,CABA,15 a 29 años,55.05,49.3,10.44
+2023,4,CABA,30 a 49 años,91.58,90.29,1.4
+2023,4,CABA,50 años y más,52.15,51.38,1.48
+2023,4,Gran Buenos Aires,15 a 29 años,56.66,48.3,14.76
+2023,4,Gran Buenos Aires,30 a 49 años,85.27,81.39,4.55
+2023,4,Gran Buenos Aires,50 años y más,47.23,44.75,5.25
+2024,1,CABA,15 a 29 años,51.72,45.3,12.4
+2024,1,CABA,30 a 49 años,94.06,92.0,2.18
+2024,1,CABA,50 años y más,52.4,49.25,6.02
+2024,1,Gran Buenos Aires,15 a 29 años,52.53,42.4,19.28
+2024,1,Gran Buenos Aires,30 a 49 años,84.29,77.73,7.79
+2024,1,Gran Buenos Aires,50 años y más,48.16,45.65,5.21
+2024,2,CABA,15 a 29 años,53.29,46.18,13.34
+2024,2,CABA,30 a 49 años,91.99,88.68,3.6
+2024,2,CABA,50 años y más,53.29,51.41,3.52
+2024,2,Gran Buenos Aires,15 a 29 años,54.75,45.65,16.62
+2024,2,Gran Buenos Aires,30 a 49 años,84.71,79.65,5.97
+2024,2,Gran Buenos Aires,50 años y más,50.52,46.79,7.38
+2024,3,CABA,15 a 29 años,56.44,51.08,9.49
+2024,3,CABA,30 a 49 años,91.61,88.95,2.91
+2024,3,CABA,50 años y más,52.72,50.8,3.65
+2024,3,Gran Buenos Aires,15 a 29 años,56.21,46.15,17.9
+2024,3,Gran Buenos Aires,30 a 49 años,84.02,79.73,5.11
+2024,3,Gran Buenos Aires,50 años y más,46.92,44.62,4.9
+2024,4,CABA,15 a 29 años,52.22,47.83,8.42
+2024,4,CABA,30 a 49 años,91.07,88.33,3.01
+2024,4,CABA,50 años y más,56.14,54.96,2.11
+2024,4,Gran Buenos Aires,15 a 29 años,55.01,46.45,15.57
+2024,4,Gran Buenos Aires,30 a 49 años,85.17,81.01,4.89
+2024,4,Gran Buenos Aires,50 años y más,50.15,47.0,6.28
+2025,1,CABA,15 a 29 años,50.4,41.78,17.1
+2025,1,CABA,30 a 49 años,91.44,87.23,4.6
+2025,1,CABA,50 años y más,52.72,50.05,5.06
+2025,1,Gran Buenos Aires,15 a 29 años,56.75,45.22,20.31
+2025,1,Gran Buenos Aires,30 a 49 años,82.66,77.26,6.54
+2025,1,Gran Buenos Aires,50 años y más,49.28,46.98,4.67
+2025,2,CABA,15 a 29 años,55.04,49.13,10.73
+2025,2,CABA,30 a 49 años,93.25,91.67,1.7
+2025,2,CABA,50 años y más,53.83,51.63,4.1
+2025,2,Gran Buenos Aires,15 a 29 años,53.56,44.25,17.37
+2025,2,Gran Buenos Aires,30 a 49 años,83.09,77.15,7.14
+2025,2,Gran Buenos Aires,50 años y más,48.15,44.54,7.51
+2025,3,CABA,15 a 29 años,61.65,58.14,5.69
+2025,3,CABA,30 a 49 años,91.62,88.49,3.42
+2025,3,CABA,50 años y más,53.65,51.77,3.49
+2025,3,Gran Buenos Aires,15 a 29 años,52.29,45.32,13.34
+2025,3,Gran Buenos Aires,30 a 49 años,83.61,78.94,5.58
+2025,3,Gran Buenos Aires,50 años y más,49.65,46.7,5.95
+2025,4,CABA,15 a 29 años,51.52,45.09,12.48
+2025,4,CABA,30 a 49 años,94.33,90.31,4.26
+2025,4,CABA,50 años y más,51.99,51.38,1.19
+2025,4,Gran Buenos Aires,15 a 29 años,53.02,42.57,19.72
+2025,4,Gran Buenos Aires,30 a 49 años,82.92,77.35,6.72
+2025,4,Gran Buenos Aires,50 años y más,50.48,47.81,5.3
+2026,1,CABA,15 a 29 años,52.9,46.79,11.55
+2026,1,CABA,30 a 49 años,90.36,87.96,2.65
+2026,1,CABA,50 años y más,52.53,50.43,4.0
+2026,1,Gran Buenos Aires,15 a 29 años,54.87,45.51,17.07
+2026,1,Gran Buenos Aires,30 a 49 años,83.45,77.1,7.62
+2026,1,Gran Buenos Aires,50 años y más,47.74,44.76,6.25
+2026,2,CABA,15 a 29 años,60.2,51.8,13.96
+2026,2,CABA,30 a 49 años,92.65,89.17,3.75
+2026,2,CABA,50 años y más,55.33,53.59,3.14
+2026,2,Gran Buenos Aires,15 a 29 años,51.01,43.15,15.41
+2026,2,Gran Buenos Aires,30 a 49 años,82.72,77.11,6.78
+2026,2,Gran Buenos Aires,50 años y más,49.75,46.33,6.87

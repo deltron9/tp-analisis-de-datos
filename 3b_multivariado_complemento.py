@@ -27,13 +27,23 @@ for col in ['AGLOMERADO', 'ANO4', 'TRIMESTRE', 'ESTADO', 'PONDERA', 'PONDIIO',
 df = df[df['AGLOMERADO'].isin([32, 33])].copy()
 df['AGLO'] = df['AGLOMERADO'].map({32: 'CABA', 33: 'Gran Buenos Aires'})
 
-# Años con menos de 4 trimestres (se marcan con círculos vacíos en los gráficos)
+# Eje temporal trimestral: PER = año*4 + (trimestre-1) -> entero consecutivo
+df['PER'] = (df['ANO4'] * 4 + df['TRIMESTRE'] - 1).astype(int)
+PERIODOS = sorted(df['PER'].unique())
+PER_MIN, PER_MAX = PERIODOS[0], PERIODOS[-1]
+
+
+def etiqueta_per(p):
+    return f"{p // 4}-T{p % 4 + 1}"
+
+
+NOTA_SERIE = f"Series trimestrales, {etiqueta_per(PER_MIN)} a {etiqueta_per(PER_MAX)}."
+
+# Años completos (4 trimestres): se usan solo para la tabla anual y la tabla de sectores
 trim_por_ano = df.groupby('ANO4')['TRIMESTRE'].nunique()
-ANOS_PARCIALES = [int(a) for a in trim_por_ano[trim_por_ano < 4].index]
 ANOS_COMPLETOS = [int(a) for a in trim_por_ano[trim_por_ano == 4].index]
+ANOS_PARCIALES = [int(a) for a in trim_por_ano[trim_por_ano < 4].index]
 ANO_INI, ANO_FIN = min(ANOS_COMPLETOS), max(ANOS_COMPLETOS)
-NOTA_PARCIALES = (f"Círculos vacíos: año con relevamiento parcial ({', '.join(map(str, ANOS_PARCIALES))}); "
-                  "no es estrictamente comparable por estacionalidad.")
 
 # Variables de agrupamiento
 df['SEXO'] = df['CH04'].map({1: 'Varones', 2: 'Mujeres'})
@@ -43,16 +53,18 @@ df['GRUPO_EDAD'] = pd.cut(df['CH06'], bins=[14, 29, 49, 120],
                           labels=['15 a 29 años', '30 a 49 años', '50 años y más'])
 ORDEN_EDAD = ['15 a 29 años', '30 a 49 años', '50 años y más']
 
+# Nivel educativo en 4 grupos: con datos trimestrales, "primaria incompleta" en CABA
+# tiene muy pocos casos por trimestre, por eso se une con "secundaria incompleta".
 niv_map = {
-    1: 'Hasta primaria incompleta', 7: 'Hasta primaria incompleta',
-    2: 'Primaria completa / Sec. incompleta', 3: 'Primaria completa / Sec. incompleta',
+    1: 'Hasta secundaria incompleta', 7: 'Hasta secundaria incompleta',
+    2: 'Hasta secundaria incompleta', 3: 'Hasta secundaria incompleta',
     4: 'Secundaria completa',
     5: 'Superior / Univ. incompleto',
     6: 'Superior / Univ. completo'
 }
 df['NIVEL'] = df['NIVEL_ED'].map(niv_map)
-ORDEN_NIVEL = ['Hasta primaria incompleta', 'Primaria completa / Sec. incompleta',
-               'Secundaria completa', 'Superior / Univ. incompleto', 'Superior / Univ. completo']
+ORDEN_NIVEL = ['Hasta secundaria incompleta', 'Secundaria completa',
+               'Superior / Univ. incompleto', 'Superior / Univ. completo']
 
 # Rama de actividad: PP04B_COD es la clase CAES-Mercosur 1.0 (4 dígitos);
 # los 2 primeros dígitos son la división. Se agrupa en sectores amplios.
@@ -103,42 +115,64 @@ fmt_millones = ticker.FuncFormatter(lambda v, p: f'${v:,.1f}M'.replace('.', ',')
 
 
 def estilo(ax):
+    """Estilo común y eje X trimestral: marca en cada trimestre, etiqueta en cada T1."""
     ax.yaxis.grid(True, linestyle=':', color='gray', alpha=0.5)
     ax.xaxis.grid(False)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.set_xticks(range(2016, 2027))
-    ax.tick_params(axis='x', rotation=45, labelsize=8)
+    etiquetas = []
+    for i, p in enumerate(PERIODOS):
+        if p % 4 == 0:
+            etiquetas.append(str(p // 4))
+        elif i == 0:
+            etiquetas.append(etiqueta_per(p))
+        else:
+            etiquetas.append('')
+    ax.set_xticks(PERIODOS)
+    ax.set_xticklabels(etiquetas, rotation=45, fontsize=8)
+    ax.tick_params(axis='x', length=3)
+    ax.set_xlim(PER_MIN - 0.7, PER_MAX + 0.7)
 
 
 def linea(ax, sub, y, color, label, marker='o', ls='-'):
-    """Línea anual; los años parciales se marcan con círculo vacío."""
-    ax.plot(sub['ANO4'], sub[y], marker=marker, ms=5, lw=2.1, color=color, ls=ls, label=label)
-    p = sub[sub['ANO4'].isin(ANOS_PARCIALES)]
-    if len(p):
-        ax.plot(p['ANO4'], p[y], marker=marker, ms=5.5, mfc='white', mec=color, mew=1.5, ls='none')
+    sub = sub.sort_values('PER')
+    ax.plot(sub['PER'], sub[y], marker=marker, ms=3, lw=1.8, color=color, ls=ls, label=label)
 
 
 def guardar(fig, archivo):
-    fig.text(0.01, -0.02, NOTA_PARCIALES, fontsize=8.2, color='#555555')
+    fig.text(0.01, -0.02, NOTA_SERIE, fontsize=8.2, color='#555555')
     fig.savefig(f'graficos/{archivo}', dpi=300, bbox_inches='tight')
     plt.close(fig)
     print(f"  guardado: graficos/{archivo}")
 
 
 # -------------------------------------------------------------------------
-# 3. TABLA 1 Y FIGURA 7: MEDIDAS DE TENDENCIA CENTRAL Y POSICIÓN (PONDIIO)
+# 3. TABLAS 1 Y FIGURA 7: MEDIDAS DE TENDENCIA CENTRAL Y POSICIÓN (PONDIIO)
 # -------------------------------------------------------------------------
+def medidas(g):
+    q1, q2, q3 = weighted_quantiles(g['P21_REAL'], [0.25, 0.5, 0.75], g['PONDIIO'])
+    return {'Casos (sin ponderar)': len(g),
+            'Media': np.average(g['P21_REAL'], weights=g['PONDIIO']),
+            'Q1': q1, 'Mediana': q2, 'Q3': q3}
+
+
 print("=== TABLA 1: INGRESO REAL (media, mediana, Q1, Q3) ===")
+# Trimestral (base de la figura 7)
+filas = []
+for (ano, tri, aglo), g in ocup.groupby(['ANO4', 'TRIMESTRE', 'AGLO']):
+    filas.append({'Año': int(ano), 'Trimestre': int(tri), 'Aglomerado': aglo, **medidas(g)})
+tabla_trim = pd.DataFrame(filas)
+tabla_trim['PER'] = tabla_trim['Año'] * 4 + tabla_trim['Trimestre'] - 1
+tabla_trim['Media/Mediana'] = (tabla_trim['Media'] / tabla_trim['Mediana']).round(2)
+for c in ['Media', 'Q1', 'Mediana', 'Q3']:
+    tabla_trim[c] = tabla_trim[c].round(0)
+tabla_trim.drop(columns='PER').to_csv('tablas/tabla_ingresos_trimestral.csv', index=False, encoding='utf-8-sig')
+
+# Anual (resumen para el informe)
 filas = []
 for (ano, aglo), g in ocup.groupby(['ANO4', 'AGLO']):
-    q1, q2, q3 = weighted_quantiles(g['P21_REAL'], [0.25, 0.5, 0.75], g['PONDIIO'])
-    filas.append({
-        'Año': int(ano), 'Aglomerado': aglo, 'Casos (sin ponderar)': len(g),
-        'Media': np.average(g['P21_REAL'], weights=g['PONDIIO']),
-        'Q1': q1, 'Mediana': q2, 'Q3': q3,
-        'Año parcial': int(ano) in ANOS_PARCIALES
-    })
+    filas.append({'Año': int(ano), 'Aglomerado': aglo, **medidas(g),
+                  'Año parcial': int(ano) in ANOS_PARCIALES})
 tabla_ing = pd.DataFrame(filas)
 tabla_ing['Media/Mediana'] = (tabla_ing['Media'] / tabla_ing['Mediana']).round(2)
 for c in ['Media', 'Q1', 'Mediana', 'Q3']:
@@ -146,35 +180,36 @@ for c in ['Media', 'Q1', 'Mediana', 'Q3']:
 tabla_ing.to_csv('tablas/tabla_ingresos_anual.csv', index=False, encoding='utf-8-sig')
 print(tabla_ing.to_string(index=False))
 
-fig, axes = plt.subplots(1, 2, figsize=(12.5, 4.6), sharey=True)
+fig, axes = plt.subplots(1, 2, figsize=(13, 4.8), sharey=True)
 for ax, aglo in zip(axes, ORDEN_AGLO):
-    sub = tabla_ing[tabla_ing['Aglomerado'] == aglo].sort_values('Año').rename(columns={'Año': 'ANO4'})
+    sub = tabla_trim[tabla_trim['Aglomerado'] == aglo]
     sub = sub.assign(Media_M=sub['Media'] / 1e6, Mediana_M=sub['Mediana'] / 1e6)
     linea(ax, sub, 'Media_M', COLORES_AGLO[aglo], 'Media ponderada', marker='o')
     linea(ax, sub, 'Mediana_M', COLORES_AGLO[aglo], 'Mediana ponderada', marker='s', ls='--')
     ax.set_title(aglo, fontsize=11.5, fontweight='bold', loc='left')
     ax.yaxis.set_major_formatter(fmt_millones)
     estilo(ax)
-    ax.legend(loc='upper left', frameon=True, fontsize=9)
 axes[0].set_ylabel("Ingreso real (ocupación principal)", fontsize=10, fontweight='bold')
-fig.suptitle("Media vs. mediana del ingreso real, ocupados con ingreso válido (PONDIIO)",
+axes[0].legend(loc='upper right', frameon=True, fontsize=9)
+fig.suptitle("Media vs. mediana trimestral del ingreso real, ocupados con ingreso válido (PONDIIO)",
              fontsize=12.5, fontweight='bold', y=1.02)
 plt.tight_layout()
 guardar(fig, '07_media_vs_mediana.png')
 
 
 # -------------------------------------------------------------------------
-# 4. FIGURAS 8A-8C: TASAS DEL MERCADO LABORAL SEGÚN SEXO, EDAD Y NIVEL EDUCATIVO
+# 4. FIGURAS 8A-8C: TASAS TRIMESTRALES SEGÚN SEXO, EDAD Y NIVEL EDUCATIVO
 # -------------------------------------------------------------------------
 def tasas_por(base, grupo):
     filas = []
-    for (ano, aglo, g), d in base.groupby(['ANO4', 'AGLO', grupo], observed=True):
+    for (ano, tri, aglo, g), d in base.groupby(['ANO4', 'TRIMESTRE', 'AGLO', grupo], observed=True):
         pob = d['PONDERA'].sum()
         ocu = d.loc[d['ESTADO'] == 1, 'PONDERA'].sum()
         des = d.loc[d['ESTADO'] == 2, 'PONDERA'].sum()
         pea = ocu + des
         filas.append({
-            'ANO4': int(ano), 'AGLO': aglo, grupo: g,
+            'ANO4': int(ano), 'TRIMESTRE': int(tri), 'PER': int(ano) * 4 + int(tri) - 1,
+            'AGLO': aglo, grupo: g,
             'Actividad': pea / pob * 100,
             'Empleo': ocu / pob * 100,
             'Desocupación': des / pea * 100 if pea > 0 else np.nan
@@ -186,91 +221,103 @@ def graficar_tasas(tasas, grupo, orden, titulo, archivo):
     metricas = [('Actividad', 'Tasa de actividad (%)'),
                 ('Empleo', 'Tasa de empleo (%)'),
                 ('Desocupación', 'Tasa de desocupación (%)')]
-    fig, axes = plt.subplots(2, 3, figsize=(14, 7.4), sharex=True)
+    fig, axes = plt.subplots(2, 3, figsize=(15, 7.8), sharex=True)
     for i, aglo in enumerate(ORDEN_AGLO):
         for j, (col, etiqueta) in enumerate(metricas):
             ax = axes[i, j]
             for k, nivel in enumerate(orden):
-                sub = tasas[(tasas['AGLO'] == aglo) & (tasas[grupo] == nivel)].sort_values('ANO4')
+                sub = tasas[(tasas['AGLO'] == aglo) & (tasas[grupo] == nivel)]
                 if len(sub):
                     linea(ax, sub, col, COLORES_GRUPO[k], nivel)
             ax.set_title(f"{etiqueta} - {aglo}", fontsize=10, fontweight='bold', loc='left')
             estilo(ax)
-    axes[0, 0].legend(loc='best', frameon=True, fontsize=8)
+    # Leyenda común debajo de la figura (no tapa las líneas)
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='lower center', ncol=len(orden), frameon=False,
+               fontsize=9.5, bbox_to_anchor=(0.5, -0.03))
     fig.suptitle(titulo, fontsize=12.5, fontweight='bold', y=1.01)
     plt.tight_layout()
-    guardar(fig, archivo)
+    fig.text(0.01, -0.06, NOTA_SERIE, fontsize=8.2, color='#555555')
+    fig.savefig(f'graficos/{archivo}', dpi=300, bbox_inches='tight')
+    plt.close(fig)
+    print(f"  guardado: graficos/{archivo}")
 
 
-print("\n=== TASAS SEGÚN SEXO, EDAD Y NIVEL EDUCATIVO ===")
+print("\n=== TASAS TRIMESTRALES SEGÚN SEXO, EDAD Y NIVEL EDUCATIVO ===")
 # Sexo: población total de cada sexo (mismo criterio que las tasas generales)
 t_sexo = tasas_por(df[df['SEXO'].notna()], 'SEXO')
 graficar_tasas(t_sexo, 'SEXO', ORDEN_SEXO,
-               "Tasas de actividad, empleo y desocupación según sexo (población total)",
+               "Tasas de actividad, empleo y desocupación según sexo (población total, trimestral)",
                '08a_tasas_sexo.png')
-t_sexo.round(2).to_csv('tablas/tasas_por_sexo.csv', index=False, encoding='utf-8-sig')
+t_sexo.drop(columns='PER').round(2).to_csv('tablas/tasas_por_sexo.csv', index=False, encoding='utf-8-sig')
 
 # Edad: población de 15 años y más dentro de cada grupo
 t_edad = tasas_por(df[df['GRUPO_EDAD'].notna()], 'GRUPO_EDAD')
 graficar_tasas(t_edad, 'GRUPO_EDAD', ORDEN_EDAD,
-               "Tasas de actividad, empleo y desocupación según grupo de edad (15 años y más)",
+               "Tasas de actividad, empleo y desocupación según grupo de edad (15 años y más, trimestral)",
                '08b_tasas_edad.png')
-t_edad.round(2).to_csv('tablas/tasas_por_edad.csv', index=False, encoding='utf-8-sig')
+t_edad.drop(columns='PER').round(2).to_csv('tablas/tasas_por_edad.csv', index=False, encoding='utf-8-sig')
 
-# Nivel educativo: población de 25 años y más (edad en que se completa el ciclo educativo típico)
+# Nivel educativo: población de 25 años y más
 t_nivel = tasas_por(df[(df['CH06'] >= 25) & df['NIVEL'].notna()], 'NIVEL')
 graficar_tasas(t_nivel, 'NIVEL', ORDEN_NIVEL,
-               "Tasas de actividad, empleo y desocupación según nivel educativo (25 años y más)",
+               "Tasas de actividad, empleo y desocupación según nivel educativo (25 años y más, trimestral)",
                '08c_tasas_nivel_educativo.png')
-t_nivel.round(2).to_csv('tablas/tasas_por_nivel_educativo.csv', index=False, encoding='utf-8-sig')
+t_nivel.drop(columns='PER').round(2).to_csv('tablas/tasas_por_nivel_educativo.csv', index=False, encoding='utf-8-sig')
 
 
 # -------------------------------------------------------------------------
-# 5. FIGURAS 9A-9B: EVOLUCIÓN DEL INGRESO REAL MEDIANO SEGÚN NIVEL EDUCATIVO Y EDAD
+# 5. FIGURAS 9A-9B: INGRESO REAL MEDIANO TRIMESTRAL SEGÚN NIVEL EDUCATIVO Y EDAD
 # -------------------------------------------------------------------------
-def mediana_anual_por(base, grupo):
+def mediana_trimestral_por(base, grupo):
     filas = []
-    for (ano, aglo, g), d in base.groupby(['ANO4', 'AGLO', grupo], observed=True):
+    for (ano, tri, aglo, g), d in base.groupby(['ANO4', 'TRIMESTRE', 'AGLO', grupo], observed=True):
         if len(d) < MIN_N:
             continue
         med = weighted_quantiles(d['P21_REAL'], [0.5], d['PONDIIO'])[0]
-        filas.append({'ANO4': int(ano), 'AGLO': aglo, grupo: g, 'Mediana_M': med / 1e6, 'Casos': len(d)})
+        filas.append({'ANO4': int(ano), 'TRIMESTRE': int(tri), 'PER': int(ano) * 4 + int(tri) - 1,
+                      'AGLO': aglo, grupo: g, 'Mediana_M': med / 1e6, 'Casos': len(d)})
     return pd.DataFrame(filas)
 
 
 def graficar_ingreso_grupo(med, grupo, orden, titulo, archivo):
-    fig, axes = plt.subplots(1, 2, figsize=(13, 4.8), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5.0), sharey=True)
     for ax, aglo in zip(axes, ORDEN_AGLO):
         for k, nivel in enumerate(orden):
-            sub = med[(med['AGLO'] == aglo) & (med[grupo] == nivel)].sort_values('ANO4')
+            sub = med[(med['AGLO'] == aglo) & (med[grupo] == nivel)]
             if len(sub):
                 linea(ax, sub, 'Mediana_M', COLORES_GRUPO[k], nivel)
         ax.set_title(aglo, fontsize=11.5, fontweight='bold', loc='left')
         ax.yaxis.set_major_formatter(fmt_millones)
         estilo(ax)
     axes[0].set_ylabel("Mediana del ingreso real", fontsize=10, fontweight='bold')
-    axes[0].legend(loc='upper left', frameon=True, fontsize=8.5)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='lower center', ncol=len(orden), frameon=False,
+               fontsize=9.5, bbox_to_anchor=(0.5, -0.06))
     fig.suptitle(titulo, fontsize=12.5, fontweight='bold', y=1.02)
     plt.tight_layout()
-    guardar(fig, archivo)
+    fig.text(0.01, -0.10, NOTA_SERIE, fontsize=8.2, color='#555555')
+    fig.savefig(f'graficos/{archivo}', dpi=300, bbox_inches='tight')
+    plt.close(fig)
+    print(f"  guardado: graficos/{archivo}")
 
 
-print("\n=== EVOLUCIÓN DEL INGRESO MEDIANO ===")
-m_nivel = mediana_anual_por(ocup[ocup['NIVEL'].notna()], 'NIVEL')
+print("\n=== EVOLUCIÓN TRIMESTRAL DEL INGRESO MEDIANO ===")
+m_nivel = mediana_trimestral_por(ocup[ocup['NIVEL'].notna()], 'NIVEL')
 graficar_ingreso_grupo(m_nivel, 'NIVEL', ORDEN_NIVEL,
-                       "Evolución del ingreso real mediano según nivel educativo",
+                       "Evolución trimestral del ingreso real mediano según nivel educativo",
                        '09a_evolucion_ingreso_nivel.png')
-m_nivel.round(4).to_csv('tablas/mediana_ingreso_por_nivel.csv', index=False, encoding='utf-8-sig')
+m_nivel.drop(columns='PER').round(4).to_csv('tablas/mediana_ingreso_por_nivel.csv', index=False, encoding='utf-8-sig')
 
-m_edad = mediana_anual_por(ocup[ocup['GRUPO_EDAD'].notna()], 'GRUPO_EDAD')
+m_edad = mediana_trimestral_por(ocup[ocup['GRUPO_EDAD'].notna()], 'GRUPO_EDAD')
 graficar_ingreso_grupo(m_edad, 'GRUPO_EDAD', ORDEN_EDAD,
-                       "Evolución del ingreso real mediano según grupo de edad",
+                       "Evolución trimestral del ingreso real mediano según grupo de edad",
                        '09b_evolucion_ingreso_edad.png')
-m_edad.round(4).to_csv('tablas/mediana_ingreso_por_edad.csv', index=False, encoding='utf-8-sig')
+m_edad.drop(columns='PER').round(4).to_csv('tablas/mediana_ingreso_por_edad.csv', index=False, encoding='utf-8-sig')
 
 
 # -------------------------------------------------------------------------
-# 6. RAMA DE ACTIVIDAD (PP04B_COD): TABLA 2 Y FIGURA 10
+# 6. RAMA DE ACTIVIDAD (PP04B_COD): TABLA 2 Y FIGURA 10 (no son series de líneas)
 # -------------------------------------------------------------------------
 print("\n=== RAMA DE ACTIVIDAD (PP04B_COD -> sector CAES) ===")
 ocu_all = df[(df['ESTADO'] == 1) & df['SECTOR'].notna()].copy()
