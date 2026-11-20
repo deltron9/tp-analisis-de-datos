@@ -312,6 +312,133 @@ plt.savefig('graficos/05d_boxplot_edad.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # -------------------------------------------------------------------------
+# FIGURA 5E: INGRESO MEDIANO SEGÚN RAMA DE ACTIVIDAD ECONÓMICA (PP04B_COD)
+# -------------------------------------------------------------------------
+# Agrupamiento oficial CAES-Mercosur (primeros 2 dígitos de PP04B_COD)
+def mapear_rama_caes(cod):
+    if pd.isna(cod):
+        return np.nan
+    s = str(cod).replace('.0', '').strip().zfill(4)
+    d2 = int(s[:2]) if s[:2].isdigit() else 0
+    if 10 <= d2 <= 33:
+        return 'Industria\nmanufacturera'
+    elif 41 <= d2 <= 43:
+        return 'Construcción'
+    elif 45 <= d2 <= 47:
+        return 'Comercio'
+    elif 49 <= d2 <= 53:
+        return 'Transporte y\nalmacenamiento'
+    elif 55 <= d2 <= 56:
+        return 'Hotelería y\ngastronomía'
+    elif 58 <= d2 <= 66:
+        return 'Info., comun. y\nfinanzas'
+    elif 68 <= d2 <= 82:
+        return 'Serv. prof., inm.\ny admin.'
+    elif d2 == 84:
+        return 'Administración\npública'
+    elif 85 <= d2 <= 88:
+        return 'Enseñanza y\nsalud'
+    elif 97 <= d2 <= 98:
+        return 'Servicio\ndoméstico'
+    return np.nan
+
+ocup_pos['RAMA_NOM'] = ocup_pos['PP04B_COD'].apply(mapear_rama_caes)
+
+# Seleccionar las 7 ramas con mayor volumen de ocupados para una comparación limpia
+top_ramas = ocup_pos['RAMA_NOM'].value_counts().nlargest(7).index.tolist()
+rows_rama = []
+for nom in ['CABA', 'Gran Buenos Aires']:
+    sub = ocup_pos[(ocup_pos['AGLOMERADO_NOM'] == nom) & (ocup_pos['RAMA_NOM'].isin(top_ramas))]
+    for rama in top_ramas:
+        g = sub[sub['RAMA_NOM'] == rama]
+        if len(g) > 0:
+            med = weighted_quantiles(g['P21_REAL'], [0.5], g['PONDIIO'])[0] / 1e6
+            rows_rama.append({'Aglomerado': nom, 'Rama': rama, 'Mediana': med})
+
+df_rama = pd.DataFrame(rows_rama)
+orden_rama = (
+    df_rama[df_rama['Aglomerado'] == 'CABA']
+    .sort_values('Mediana', ascending=True)['Rama']
+    .tolist()
+)
+
+fig5e, ax5_e = plt.subplots(figsize=(9.5, 5.2))
+sns.barplot(
+    data=df_rama, y='Rama', x='Mediana', hue='Aglomerado',
+    order=orden_rama, hue_order=['CABA', 'Gran Buenos Aires'],
+    palette=colores_ref, edgecolor='black', linewidth=1, ax=ax5_e
+)
+ax5_e.set_title("Ingreso real mediano ponderado según rama de actividad económica (PP04B_COD)",
+                fontsize=11.5, fontweight='bold', loc='left', pad=12)
+ax5_e.set_ylabel("")
+ax5_e.set_xlabel("Mediana ingreso real (pesos constantes 2026-T2)", fontsize=9.5, fontweight='bold')
+ax5_e.set_xlim(0, 2.35)
+ax5_e.xaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f'${val:,.1f}M'.replace('.', ',')))
+ax5_e.xaxis.grid(True, linestyle=':', color='gray', alpha=0.5)
+ax5_e.yaxis.grid(False)
+ax5_e.spines['top'].set_visible(False)
+ax5_e.spines['right'].set_visible(False)
+ax5_e.legend(title="", loc='lower right', frameon=True, fontsize=9)
+
+for p in ax5_e.patches:
+    w = p.get_width()
+    if w > 0:
+        ax5_e.annotate(f'${w:.2f}M'.replace('.', ','), (w, p.get_y() + p.get_height()/2.),
+                    ha='left', va='center', fontsize=8.2, fontweight='bold', xytext=(4, 0), textcoords='offset points')
+
+fig5e.text(0.01, -0.02, "Fuente: Elaboración propia en base a microdatos EPH - INDEC (2016-T2 a 2026-T2). Ponderado por PONDIIO.",
+        fontsize=8, color='#555555')
+plt.tight_layout()
+plt.savefig('graficos/05e_ingreso_rama.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# -------------------------------------------------------------------------
+# TABLAS COMPLEMENTARIAS: TASAS LABORALES DESAGREGADAS Y EVOLUCIÓN HISTÓRICA
+# -------------------------------------------------------------------------
+os.makedirs("tablas", exist_ok=True)
+
+def calcular_tasas_grupo(df_base, cols_grupo):
+    res = []
+    for keys, g in df_base.groupby(cols_grupo, observed=True):
+        if not isinstance(keys, tuple):
+            keys = (keys,)
+        pob = g['PONDERA'].sum()
+        ocup = g[g['ESTADO'] == 1]['PONDERA'].sum()
+        desoc = g[g['ESTADO'] == 2]['PONDERA'].sum()
+        pea = ocup + desoc
+        fila = dict(zip(cols_grupo, keys))
+        fila.update({
+            'Tasa_Actividad_%': round((pea / pob) * 100, 1) if pob > 0 else np.nan,
+            'Tasa_Empleo_%': round((ocup / pob) * 100, 1) if pob > 0 else np.nan,
+            'Tasa_Desocupacion_%': round((desoc / pea) * 100, 1) if pea > 0 else np.nan
+        })
+        res.append(fila)
+    return pd.DataFrame(res)
+
+# Preparar dimensiones sociodemográficas sobre la población total
+df_dem = df.copy()
+df_dem['SEXO_NOM'] = df_dem['CH04'].map({1: 'Varones', 2: 'Mujeres'})
+df_dem['GRUPO_EDAD'] = pd.cut(df_dem['CH06'], bins=[13, 29, 49, 100],
+                            labels=['14 a 29 años', '30 a 49 años', '+50 años'])
+df_dem['NIVEL_SHORT'] = df_dem['NIVEL_ED'].map(niv_map_short).str.replace('\n', ' ')
+
+tasas_sexo = calcular_tasas_grupo(df_dem.dropna(subset=['SEXO_NOM']), ['AGLOMERADO_NOM', 'SEXO_NOM'])
+tasas_edad = calcular_tasas_grupo(df_dem.dropna(subset=['GRUPO_EDAD']), ['AGLOMERADO_NOM', 'GRUPO_EDAD'])
+tasas_edu = calcular_tasas_grupo(df_dem[df_dem['CH06'] >= 18].dropna(subset=['NIVEL_SHORT']), ['AGLOMERADO_NOM', 'NIVEL_SHORT'])
+
+# Exportar tablas resumen para respaldar la redacción del informe
+df_tasas.round(2).to_csv('tablas/evolucion_tasas_anual.csv', index=False)
+df_ing.round(2).to_csv('tablas/evolucion_ingresos_cuartiles.csv', index=False)
+tasas_sexo.to_csv('tablas/tasas_por_sexo.csv', index=False)
+tasas_edad.to_csv('tablas/tasas_por_edad.csv', index=False)
+tasas_edu.to_csv('tablas/tasas_por_educacion.csv', index=False)
+
+print("\n=== TASAS LABORALES DESAGREGADAS (PONDERADAS POR PONDERA) ===")
+print("\n-- Por Sexo --\n", tasas_sexo.to_string(index=False))
+print("\n-- Por Grupo Etario (14+) --\n", tasas_edad.to_string(index=False))
+print("\n-- Por Nivel Educativo (18+) --\n", tasas_edu.to_string(index=False))
+
+# -------------------------------------------------------------------------
 # 5. FIGURA 6: CORRELOGRAMA DE SPEARMAN
 # -------------------------------------------------------------------------
 corr_df = ocup_pos[['P21_REAL', 'NIVEL_ED', 'CALIF_COD', 'PP3E_TOT', 'CH06']].copy()
