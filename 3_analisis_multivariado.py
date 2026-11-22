@@ -83,6 +83,26 @@ def weighted_mean(values, sample_weight):
     validos = np.isfinite(values) & np.isfinite(sample_weight) & (sample_weight > 0)
     return np.average(values[validos], weights=sample_weight[validos]) if validos.sum() > 0 else np.nan
 
+def estilizar_ejes(ax, solo_y=False):
+    ax.tick_params(
+        axis="y",
+        which="major",
+        left=True,
+        right=False,
+        direction="inout",
+        length=7,
+        width=1.2,
+        color="#000000"
+    )
+    ax.spines["left"].set_color("#000000")
+    ax.spines["left"].set_linewidth(1.0)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    if solo_y:
+        ax.spines["bottom"].set_color("#000000")
+        ax.spines["bottom"].set_linewidth(1.0)
+
 def configurar_eje_temporal(ax, mostrar_labels=True):
     ax.set_xticks(eje_x)
     if mostrar_labels:
@@ -90,10 +110,24 @@ def configurar_eje_temporal(ax, mostrar_labels=True):
     else:
         ax.set_xticklabels([])
     ax.set_xlim(-0.6, len(eje_x) - 0.4)
+
+    ax.tick_params(
+        axis="x",
+        which="major",
+        bottom=True,
+        top=False,
+        direction="inout",
+        length=7,
+        width=1.2,
+        color="#000000"
+    )
+    ax.spines["bottom"].set_color("#000000")
+    ax.spines["bottom"].set_linewidth(1.0)
+
+    estilizar_ejes(ax, solo_y=False)
+
     ax.xaxis.grid(True, linestyle=":", color="gray", alpha=0.25)
     ax.yaxis.grid(True, linestyle=":", color="gray", alpha=0.5)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
 
 def agregar_referencia_2020(ax, label=False):
     if "2020-T1" in mapa_periodos and "2022-T1" in mapa_periodos:
@@ -105,6 +139,7 @@ def agregar_referencia_2020(ax, label=False):
             zorder=0,
             label="Pandemia COVID-19 (T1 2020 a T1 2022)" if label else None
         )
+
 # -------------------------------------------------------------------------
 # GRÁFICOS DE TASAS DE ACTIVIDAD, DESOCUPACIÓN Y EMPLEO: EVOLUCIÓN TRIMESTRAL DE LAS 3 TASAS POR SEPARADO
 # -------------------------------------------------------------------------
@@ -192,8 +227,8 @@ for i, nom in enumerate(["CABA", "Gran Buenos Aires"]):
     if i == 0:
         ax.legend(loc="upper right", ncol=5, frameon=True, fontsize=8.3)
 
-plt.suptitle("Evolución trimestral de tendencia central y posición",
-             fontsize=12.5, fontweight="bold", y=0.98)
+plt.suptitle("Evolución trimestral de los ingresos reales",
+             fontsize=12.5, fontweight="bold", y=0.91)
 plt.tight_layout(rect=[0, 0, 1, 0.95], h_pad=2.8)
 
 # Línea divisoria 
@@ -301,8 +336,7 @@ ax5_bl.set_ylabel("")
 ax5_bl.set_xlabel("Mediana ingreso real (en millones)", fontsize=9, fontweight="bold")
 ax5_bl.set_xlim(0, df_cal["Mediana_M"].max() * 1.18)
 ax5_bl.xaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
-ax5_bl.spines["top"].set_visible(False)
-ax5_bl.spines["right"].set_visible(False)
+estilizar_ejes(ax5_bl, solo_y=True)
 ax5_bl.legend(title="", loc="lower right", frameon=True, fontsize=8.5)
 for p in ax5_bl.patches:
     w = p.get_width()
@@ -319,8 +353,7 @@ ax5_br.set_ylabel("")
 ax5_br.set_xlabel("Mediana ingreso real (en millones)", fontsize=9, fontweight="bold")
 ax5_br.set_xlim(0, df_rama["Mediana_M"].max() * 1.18)
 ax5_br.xaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
-ax5_br.spines["top"].set_visible(False)
-ax5_br.spines["right"].set_visible(False)
+estilizar_ejes(ax5_br, solo_y=True)
 ax5_br.legend_.remove()
 for p in ax5_br.patches:
     w = p.get_width()
@@ -420,8 +453,7 @@ ax7_l.set_xlabel("")
 ax7_l.set_ylabel("Ingreso real en millones de pesos", fontsize=9.5, fontweight="bold")
 ax7_l.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
 ax7_l.yaxis.grid(True, linestyle=":", color="gray", alpha=0.5)
-ax7_l.spines["top"].set_visible(False)
-ax7_l.spines["right"].set_visible(False)
+estilizar_ejes(ax7_l, solo_y=True)
 ax7_l.legend(title="", loc="upper left", frameon=True, fontsize=8.5)
 
 sns.heatmap(corr_plot, annot=True, fmt=".2f", cmap="YlGnBu", vmin=-0.2, vmax=1.0,
