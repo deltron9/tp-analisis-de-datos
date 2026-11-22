@@ -68,9 +68,9 @@ print(resumen.round(2).to_string(index=False))
 # 3. FIGURA 1: BARRAS DE CALIDAD DE DATOS (% Y CASOS SOBRE OCUPADOS)
 # -------------------------------------------------------------------------
 etiquetas = {
-    'no_resp': 'No respuesta\n(P21 = -9)',
-    'cero': 'Ingreso cero\n(P21 = 0)',
-    'atipicos': 'Valores atípicos\nsuperiores'
+    'no_resp': 'No respuesta',
+    'cero': 'Ingreso cero',
+    'atipicos': 'Valores atípicos'
 }
 orden_metricas = list(etiquetas.values())
 
