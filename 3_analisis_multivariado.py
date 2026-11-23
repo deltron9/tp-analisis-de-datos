@@ -458,58 +458,120 @@ fig5c.add_artist(linea_divisoria_5c)
 plt.savefig(DIR_GRAFICOS / "05c_ramas_trimestral.png", dpi=300, bbox_inches="tight")
 plt.close()
 # -------------------------------------------------------------------------
-# FIGURA 7: SÍNTESIS MULTIVARIADA (EDAD CH06 + CORRELOGRAMA DE SPEARMAN)
+# TABLA 5C_N: CANTIDAD DE CASOS (FRECUENCIA MUESTRAL) POR RUBRO Y AGLOMERADO
 # -------------------------------------------------------------------------
-ocup_pos["GRUPO_EDAD"] = pd.cut(ocup_pos["CH06"], bins=[14, 29, 49, np.inf],
-                                labels=["15 a 29 años\n(Jóvenes)", "30 a 49 años\n(Adultos)", "50 años y más\n(Mayores)"])
-plot_edad = ocup_pos.dropna(subset=["GRUPO_EDAD", "P21_REAL", "AGLOMERADO_NOM"]).copy()
-plot_edad["INGRESO_M"] = plot_edad["P21_REAL"] / 1e6
+conteo_ramas = (
+    ocup_pos.dropna(subset=["RAMA_NOM"])
+    .groupby(["AGLOMERADO_NOM", "RAMA_NOM"])
+    .size()
+    .reset_index(name="Casos_n")
+)
 
-rows_ed = []
-for (aglo, ged), g in plot_edad.groupby(["AGLOMERADO_NOM", "GRUPO_EDAD"], observed=True):
-    q25, q50, q75 = weighted_quantiles(g["P21_REAL"], [0.25, 0.50, 0.75], g["PONDIIO"])
-    rows_ed.append({"Aglomerado": aglo, "Grupo_Edad": ged.replace("\n", " "),
-                    "Q25_M": round(q25/1e6, 3), "Mediana_M": round(q50/1e6, 3), "Q75_M": round(q75/1e6, 3)})
-pd.DataFrame(rows_ed).to_csv(DIR_TABLAS / "07a_ingresos_grupo_etario.csv", index=False, sep=";", decimal=",")
+# Calcular participación % dentro de cada aglomerado
+totales_aglo = conteo_ramas.groupby("AGLOMERADO_NOM")["Casos_n"].transform("sum")
+conteo_ramas["Participacion_%"] = (conteo_ramas["Casos_n"] / totales_aglo * 100).round(2)
 
-corr_df = ocup_pos[["P21_REAL", "NIVEL_ED", "CALIF_COD", "PP3E_TOT", "CH06"]].copy()
-corr_df["NIVEL_ORD"] = corr_df["NIVEL_ED"].replace({7: 0})
-corr_df["CALIF_ORD"] = 5 - corr_df["CALIF_COD"]
-corr_df.loc[~corr_df["CALIF_COD"].isin([1, 2, 3, 4]), "CALIF_ORD"] = np.nan
-corr_df.loc[(corr_df["PP3E_TOT"] <= 0) | (corr_df["PP3E_TOT"] > 120), "PP3E_TOT"] = np.nan
-corr_df.loc[~corr_df["NIVEL_ED"].isin([1, 2, 3, 4, 5, 6, 7]), "NIVEL_ORD"] = np.nan
+# Ordenar de mayor a menor cantidad de casos dentro de cada aglomerado
+conteo_ramas = conteo_ramas.sort_values(["AGLOMERADO_NOM", "Casos_n"], ascending=[True, False])
+conteo_ramas.to_csv(DIR_TABLAS / "05c_cantidad_casos_ramas.csv", index=False, sep=";", decimal=",")
 
-corr_plot = corr_df[["P21_REAL", "NIVEL_ORD", "CALIF_ORD", "PP3E_TOT", "CH06"]].rename(columns={
-    "P21_REAL": "Ingreso Real\n(P21_REAL)",
-    "NIVEL_ORD": "Nivel Educativo\n(NIVEL_ED)",
-    "CALIF_ORD": "Calificación\n(PP04D_COD)",
-    "PP3E_TOT": "Horas Trabajadas\n(PP3E_TOT)",
-    "CH06": "Edad\n(CH06)"
-}).corr(method="spearman")
-corr_plot.to_csv(DIR_TABLAS / "07b_matriz_spearman.csv", sep=";", decimal=",")
+print(conteo_ramas.to_string(index=False))
 
-fig7, (ax7_l, ax7_r) = plt.subplots(1, 2, figsize=(14.5, 5.0), gridspec_kw={"width_ratios": [1.05, 1.15]})
+# Top 3 rubros específicos con mayor cantidad de casos por aglomerado (sin "Otros servicios")
+top3_casos = (
+    conteo_ramas[conteo_ramas["RAMA_NOM"] != "Otros servicios y actividades"]
+    .groupby("AGLOMERADO_NOM")
+    .head(3)
+)
+print("\n--- TOP 3 RUBROS POR CANTIDAD DE CASOS ---")
+print(top3_casos.to_string(index=False))
+# -------------------------------------------------------------------------
+# GRÁFICO MULTIVARIADO DE 4 VARIABLES: INGRESO x EDAD x SEXO x AGLOMERADO
+# -------------------------------------------------------------------------
+def clasificar_edad(e):
+    if pd.isna(e) or e < 15:
+        return np.nan
+    elif e <= 29:
+        return "15 a 29 años"
+    elif e <= 49:
+        return "30 a 49 años"
+    else:
+        return "50 años y más"
 
-sns.boxplot(data=plot_edad, x="GRUPO_EDAD", y="INGRESO_M", hue="AGLOMERADO_NOM",
-            hue_order=["CABA", "Gran Buenos Aires"], palette=colores_ref,
-            showfliers=False, width=0.55, linewidth=1.2, ax=ax7_l)
-ax7_l.set_title("Distribución del ingreso real según grupo etario (CH06)", fontsize=11, fontweight="bold", loc="left", pad=10)
-ax7_l.set_xlabel("")
-ax7_l.set_ylabel("Ingreso real en millones de pesos", fontsize=9.5, fontweight="bold")
-ax7_l.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
-ax7_l.yaxis.grid(True, linestyle=":", color="gray", alpha=0.5)
-estilizar_ejes(ax7_l, solo_y=True)
-ax7_l.legend(title="", loc="upper left", frameon=True, fontsize=8.5)
+ocup_pos["GRUPO_EDAD"] = ocup_pos["CH06"].apply(clasificar_edad)
 
-sns.heatmap(corr_plot, annot=True, fmt=".2f", cmap="YlGnBu", vmin=-0.2, vmax=1.0,
-            linewidths=1, linecolor="white", cbar_kws={"shrink": 0.8}, ax=ax7_r,
-            annot_kws={"size": 9.5, "weight": "bold"})
-ax7_r.set_title("Matriz de correlación de Spearman", fontsize=11, fontweight="bold", loc="left", pad=10)
-ax7_r.tick_params(axis="x", rotation=20, labelsize=8.5)
-ax7_r.tick_params(axis="y", rotation=0, labelsize=8.5)
+df_4v = ocup_pos.dropna(subset=["GRUPO_EDAD"]).copy()
+df_4v = df_4v[df_4v["CH04"].isin([1, 2])].copy()
+df_4v["SEXO_NOM"] = df_4v["CH04"].map({1: "Varones", 2: "Mujeres"})
+df_4v["P21_M"] = df_4v["P21_REAL"] / 1e6
 
+# Exportar métricas exactas (Q1, Mediana, Q3 y n) para el texto
+resumen_4v = []
+for (aglo, gedad, sexo), g in df_4v.groupby(["AGLOMERADO_NOM", "GRUPO_EDAD", "SEXO_NOM"]):
+    q25, q50, q75 = weighted_quantiles(g["P21_REAL"], [0.25, 0.50, 0.75], g["PONDIIO"]) / 1e6
+    resumen_4v.append({
+        "Aglomerado": aglo,
+        "Grupo_Edad": gedad,
+        "Sexo": sexo,
+        "Casos_n": len(g),
+        "Q1_M": round(q25, 3),
+        "Mediana_M": round(q50, 3),
+        "Q3_M": round(q75, 3)
+    })
+
+df_res_4v = pd.DataFrame(resumen_4v)
+df_res_4v.to_csv(DIR_TABLAS / "07_resumen_edad_sexo_aglo.csv", index=False, sep=";", decimal=",")
+print("\n--- RESUMEN EDAD x SEXO x AGLOMERADO ---")
+print(df_res_4v.to_string(index=False))
+
+# Gráfico (con outliers superiores visibles y eje Y acotado a $6,2M para no aplastar las cajas)
+fig_4v, axes_4v = plt.subplots(1, 2, figsize=(13.5, 5.4), sharey=True)
+paleta_sexo = {"Varones": "#0077ff", "Mujeres": "#D8DB00"}
+orden_edad = ["15 a 29 años", "30 a 49 años", "50 años y más"]
+
+for i, aglo in enumerate(["CABA", "Gran Buenos Aires"]):
+    ax = axes_4v[i]
+    sub = df_4v[df_4v["AGLOMERADO_NOM"] == aglo]
+    sns.boxplot(
+        data=sub,
+        x="GRUPO_EDAD",
+        y="P21_M",
+        hue="SEXO_NOM",
+        order=orden_edad,
+        hue_order=["Varones", "Mujeres"],
+        palette=paleta_sexo,
+        showfliers=True,
+        width=0.55,
+        boxprops=dict(edgecolor="#000000", linewidth=1.1),
+        medianprops=dict(color="#D32F2F", linewidth=2.0),
+        whiskerprops=dict(color="#000000", linewidth=1.1),
+        capprops=dict(color="#000000", linewidth=1.1),
+        flierprops=dict(
+            marker="o",
+            markersize=2.4,
+            markerfacecolor="#616161",
+            markeredgecolor="none",
+            alpha=0.35
+        ),
+        ax=ax
+    )
+    ax.set_title(aglo, fontsize=11.5, fontweight="bold", loc="left", pad=10)
+    ax.set_xlabel("Grupo etario", fontsize=9.5, fontweight="bold")
+    ax.set_ylabel("Ingreso real en millones (2026-T2)" if i == 0 else "", fontsize=9.5, fontweight="bold")
+    ax.set_ylim(0, 6.2)
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
+    ax.xaxis.grid(False)
+    ax.yaxis.grid(True, linestyle=":", color="gray", alpha=0.5)
+    estilizar_ejes(ax, solo_y=True)
+
+    if i == 0:
+        ax.get_legend().remove()
+    else:
+        ax.legend(title="", frameon=True, loc="upper right", fontsize=9.5)
+
+plt.suptitle("Distribución del ingreso real por grupo etario, sexo y aglomerado",
+             fontsize=12.5, fontweight="bold", y=1.01)
 plt.tight_layout()
-plt.savefig(DIR_GRAFICOS / "07_edad_y_correlaciones.png", dpi=300, bbox_inches="tight")
+plt.savefig(DIR_GRAFICOS / "07_ingreso_edad_sexo_aglo.png", dpi=300, bbox_inches="tight")
 plt.close()
-
-print("Listo: 8 gráficos generados en", DIR_GRAFICOS, "y 7 CSV en", DIR_TABLAS)
+print("Listo: gráficos generados en", DIR_GRAFICOS, "y 7 CSV en", DIR_TABLAS)
