@@ -330,120 +330,133 @@ plt.savefig(DIR_GRAFICOS / "05a_educacion_trimestral.png", dpi=300, bbox_inches=
 plt.close()
 
 # -------------------------------------------------------------------------
-# FIGURA 5B1: MEDIANA SEGÚN CALIFICACIÓN DEL PUESTO (PP04D_COD) - SEPARADO
+# FIGURA 5B1: EVOLUCIÓN TRIMESTRAL POR CALIFICACIÓN DEL PUESTO (PP04D_COD)
 # -------------------------------------------------------------------------
 rows_cal = []
-for nom in ["CABA", "Gran Buenos Aires"]:
-    sub = ocup_pos[(ocup_pos["AGLOMERADO_NOM"] == nom) & (ocup_pos["CALIF_NOM"].notna())]
-    for cal in ["Profesional", "Técnica", "Operativa", "No calificada"]:
-        g = sub[sub["CALIF_NOM"] == cal]
-        med = weighted_quantiles(g["P21_REAL"], [0.5], g["PONDIIO"])[0] / 1e6
-        rows_cal.append({"Aglomerado": nom, "Calificacion": cal, "Mediana_M": round(med, 3)})
-df_cal = pd.DataFrame(rows_cal)
-df_cal.to_csv(DIR_TABLAS / "05b_ingreso_calificacion.csv", index=False, sep=";", decimal=",")
-
-fig5b1, ax5_cal = plt.subplots(figsize=(10.5, 4.6))
-sns.barplot(data=df_cal, y="Calificacion", x="Mediana_M", hue="Aglomerado",
-            order=["Profesional", "Técnica", "Operativa", "No calificada"],
-            hue_order=["CABA", "Gran Buenos Aires"], palette=colores_ref, edgecolor="black", linewidth=0.9, ax=ax5_cal)
-ax5_cal.set_title("Mediana del ingreso real según Calificación del Puesto (PP04D_COD)", fontsize=11.5, fontweight="bold", loc="left", pad=12)
-ax5_cal.set_ylabel("")
-ax5_cal.set_xlabel("Mediana ingreso real en millones (2026-T2)", fontsize=9.5, fontweight="bold")
-ax5_cal.set_xlim(0, df_cal["Mediana_M"].max() * 1.18)
-ax5_cal.xaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
-estilizar_ejes(ax5_cal, solo_y=True)
-ax5_cal.legend(title="", loc="lower right", frameon=True, fontsize=9.0)
-for p in ax5_cal.patches:
-    w = p.get_width()
-    if np.isfinite(w) and w > 0:
-        ax5_cal.annotate(f"${w:.2f}M".replace(".", ","), (w, p.get_y() + p.get_height()/2.),
-                         ha="left", va="center", fontsize=8.5, fontweight="bold", xytext=(5, 0), textcoords="offset points")
-
-plt.tight_layout()
-plt.savefig(DIR_GRAFICOS / "05b_1_empleo_calificacion.png", dpi=300, bbox_inches="tight")
-plt.close()
-
-# -------------------------------------------------------------------------
-# FIGURA 5B2: MEDIANA SEGÚN RAMA DE ACTIVIDAD (PP04B_COD) - SEPARADO
-# -------------------------------------------------------------------------
-rows_rama = []
-for nom in ["CABA", "Gran Buenos Aires"]:
-    sub = ocup_pos[(ocup_pos["AGLOMERADO_NOM"] == nom) & (ocup_pos["RAMA_NOM"].notna())]
-    for rama, g in sub.groupby("RAMA_NOM"):
-        med = weighted_quantiles(g["P21_REAL"], [0.5], g["PONDIIO"])[0] / 1e6
-        rows_rama.append({"Aglomerado": nom, "Rama": rama, "Mediana_M": round(med, 3)})
-df_rama = pd.DataFrame(rows_rama)
-orden_rama = df_rama[df_rama["Aglomerado"] == "CABA"].sort_values("Mediana_M", ascending=False)["Rama"].tolist()
-df_rama.to_csv(DIR_TABLAS / "05c_ingreso_rama_actividad.csv", index=False, sep=";", decimal=",")
-
-fig5b2, ax5_rama = plt.subplots(figsize=(11.5, 6.2))
-sns.barplot(data=df_rama, y="Rama", x="Mediana_M", hue="Aglomerado",
-            order=orden_rama, hue_order=["CABA", "Gran Buenos Aires"], palette=colores_ref,
-            edgecolor="black", linewidth=0.9, ax=ax5_rama)
-ax5_rama.set_title("Mediana del ingreso real según Rama de Actividad (PP04B_COD)", fontsize=11.5, fontweight="bold", loc="left", pad=12)
-ax5_rama.set_ylabel("")
-ax5_rama.set_xlabel("Mediana ingreso real en millones (2026-T2)", fontsize=9.5, fontweight="bold")
-ax5_rama.set_xlim(0, df_rama["Mediana_M"].max() * 1.18)
-ax5_rama.xaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
-estilizar_ejes(ax5_rama, solo_y=True)
-ax5_rama.legend(title="", loc="lower right", frameon=True, fontsize=9.0)
-for p in ax5_rama.patches:
-    w = p.get_width()
-    if np.isfinite(w) and w > 0:
-        ax5_rama.annotate(f"${w:.2f}M".replace(".", ","), (w, p.get_y() + p.get_height()/2.),
-                          ha="left", va="center", fontsize=8.2, fontweight="bold", xytext=(5, 0), textcoords="offset points")
-
-plt.tight_layout()
-plt.savefig(DIR_GRAFICOS / "05b_2_empleo_rama.png", dpi=300, bbox_inches="tight")
-plt.close()
-
-# -------------------------------------------------------------------------
-# FIGURA 6: EVOLUCIÓN TRIMESTRAL POR SEXO Y BRECHA SALARIAL (CH04)
-# -------------------------------------------------------------------------
-ocup_sx = ocup_pos[ocup_pos["CH04"].isin([1, 2])].copy()
-ocup_sx["SEXO_NOM"] = ocup_sx["CH04"].map({1: "Varones", 2: "Mujeres"})
-
-rows_sx = []
-for (ano, trimestre, aglo, sx), g in ocup_sx.groupby(["ANO4", "TRIMESTRE", "AGLOMERADO_NOM", "SEXO_NOM"]):
-    med = weighted_quantiles(g["P21_REAL"], [0.5], g["PONDIIO"])[0]
+for (ano, trimestre, aglo, cal), g in ocup_pos.dropna(subset=["CALIF_NOM"]).groupby(["ANO4", "TRIMESTRE", "AGLOMERADO_NOM", "CALIF_NOM"]):
+    med = weighted_quantiles(g["P21_REAL"], [0.5], g["PONDIIO"])[0] / 1e6
     periodo = f"{ano}-T{trimestre}"
-    rows_sx.append({"ANO4": ano, "TRIMESTRE": trimestre, "PERIODO": periodo,
-                    "IDX_T": mapa_periodos[periodo], "Aglomerado": aglo, "Sexo": sx, "Mediana": med})
+    rows_cal.append({"PERIODO": periodo, "IDX_T": mapa_periodos[periodo], "Aglomerado": aglo, "Calificacion": cal, "Mediana_M": med})
+df_cal = pd.DataFrame(rows_cal).sort_values(["Aglomerado", "Calificacion", "IDX_T"])
+df_cal.drop(columns=["IDX_T"]).round(3).to_csv(DIR_TABLAS / "05b_evolucion_calificacion_trim.csv", index=False, sep=";", decimal=",")
 
-piv_sx = pd.DataFrame(rows_sx).pivot_table(
-    index=["IDX_T", "PERIODO", "ANO4", "TRIMESTRE", "Aglomerado"], columns="Sexo", values="Mediana"
-).reset_index().sort_values(["Aglomerado", "IDX_T"])
-piv_sx["Brecha_%"] = np.where(piv_sx["Varones"] > 0, ((piv_sx["Varones"] - piv_sx["Mujeres"]) / piv_sx["Varones"]) * 100, np.nan)
-piv_sx.drop(columns=["IDX_T"]).round(2).to_csv(DIR_TABLAS / "06_evolucion_sexo_trim.csv", index=False, sep=";", decimal=",")
+fig5b1, axes5b1 = plt.subplots(2, 1, figsize=(13.5, 8.8), sharey=True)
+pal_cal = ["#78909C", "#42A5F5", "#9FA300", "#0D47A1"]
+orden_cal = ["No calificada", "Operativa", "Técnica", "Profesional"]
 
-fig6, axes_sx = plt.subplots(2, 2, figsize=(16.5, 7.6), sharex=True, gridspec_kw={"height_ratios": [2, 1.1]})
 for i, aglo in enumerate(["CABA", "Gran Buenos Aires"]):
-    sub = piv_sx[piv_sx["Aglomerado"] == aglo].sort_values("IDX_T")
-    ax_top = axes_sx[0, i]
-    ax_top.plot(sub["IDX_T"], sub["Varones"] / 1e6, marker="o", markersize=3.5, linewidth=2.0, color="#0077ff", label="Varones")
-    ax_top.plot(sub["IDX_T"], sub["Mujeres"] / 1e6, marker="s", markersize=3.5, linewidth=2.0, color="#9FA300", label="Mujeres")
-    agregar_referencia_2020(ax_top, label=(i == 0))
-    ax_top.set_title(aglo, fontsize=11.5, fontweight="bold", loc="left", pad=10)
-    ax_top.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
-    configurar_eje_temporal(ax_top, mostrar_labels=False)
-    if i == 0:
-        ax_top.set_ylabel("Mediana ingreso real", fontsize=9.5, fontweight="bold")
-        ax_top.legend(loc="upper right", frameon=True, fontsize=8.5)
+    ax = axes5b1[i]
+    sub = df_cal[df_cal["Aglomerado"] == aglo]
+    for cal, col_c in zip(orden_cal, pal_cal):
+        s_c = sub[sub["Calificacion"] == cal].sort_values("IDX_T")
+        ax.plot(s_c["IDX_T"], s_c["Mediana_M"], marker="o", markersize=3.5, linewidth=1.9, color=col_c, label=cal)
+    agregar_referencia_2020(ax, label=(i == 1))
+    ax.set_title(aglo, fontsize=11.5, fontweight="bold", loc="left", pad=10)
+    ax.set_ylabel("Mediana ingreso real (2026-T2)", fontsize=9.5, fontweight="bold")
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
+    configurar_eje_temporal(ax, mostrar_labels=True)
+    if i == 1:
+        ax.legend(loc="upper right", ncol=3, frameon=True, fontsize=8.2)
 
-    ax_bot = axes_sx[1, i]
-    ax_bot.plot(sub["IDX_T"], sub["Brecha_%"], marker="d", markersize=3.5, linewidth=1.8, color="#D32F2F", label="Brecha salarial (%)")
-    ax_bot.set_ylim(0, 48)
-    configurar_eje_temporal(ax_bot, mostrar_labels=True)
-    if i == 0:
-        ax_bot.set_ylabel("Brecha salarial (%)", fontsize=9.5, fontweight="bold", color="#D32F2F")
-        ax_bot.legend(loc="upper left", frameon=True, fontsize=8.2)
+plt.suptitle("Evolución trimestral del ingreso real mediano según Calificación del Puesto",
+             fontsize=12.5, fontweight="bold", y=0.91)
+plt.tight_layout(rect=[0, 0, 1, 0.95], h_pad=2.8)
 
-plt.suptitle("Evolución trimestral del ingreso real mediano y la brecha salarial por sexo (CH04)",
-             fontsize=12.5, fontweight="bold", y=1.01)
-plt.tight_layout()
-plt.savefig(DIR_GRAFICOS / "06_evolucion_sexo_trimestral.png", dpi=300, bbox_inches="tight")
+# Línea divisoria continua negra de lado a lado
+fig5b1.canvas.draw()
+pos_sup_5b = axes5b1[0].get_position()
+pos_inf_5b = axes5b1[1].get_position()
+y_linea_5b = (pos_sup_5b.y0 + pos_inf_5b.y1) / 2 - 0.028
+
+linea_divisoria_5b = Line2D(
+    [0.02, 0.98], [y_linea_5b, y_linea_5b],
+    transform=fig5b1.transFigure, color="#000000", linewidth=1.2, linestyle="-"
+)
+fig5b1.add_artist(linea_divisoria_5b)
+
+plt.savefig(DIR_GRAFICOS / "05b_1_calificacion_trimestral.png", dpi=300, bbox_inches="tight")
 plt.close()
 
+# -------------------------------------------------------------------------
+# FIGURA 5C: EVOLUCIÓN TRIMESTRAL POR TOP 3 RAMAS DE ACTIVIDAD (PP04B_COD)
+# -------------------------------------------------------------------------
+def obtener_top3_aglo(aglo):
+    return (
+        ocup_pos[
+            (ocup_pos["AGLOMERADO_NOM"] == aglo)
+            & ocup_pos["RAMA_NOM"].notna()
+            & (ocup_pos["RAMA_NOM"] != "Otros servicios y actividades")
+        ]
+        .groupby("RAMA_NOM")["PONDIIO"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(3)
+        .index.tolist()
+    )
+
+top3_caba = obtener_top3_aglo("CABA")
+top3_gba = obtener_top3_aglo("Gran Buenos Aires")
+
+rows_rama_trim = []
+for (ano, trimestre, aglo, rama), g in ocup_pos.dropna(subset=["RAMA_NOM"]).groupby(["ANO4", "TRIMESTRE", "AGLOMERADO_NOM", "RAMA_NOM"]):
+    med = weighted_quantiles(g["P21_REAL"], [0.5], g["PONDIIO"])[0] / 1e6
+    periodo = f"{ano}-T{trimestre}"
+    rows_rama_trim.append({
+        "PERIODO": periodo,
+        "IDX_T": mapa_periodos[periodo],
+        "Aglomerado": aglo,
+        "Rama": rama,
+        "Mediana_M": med
+    })
+
+df_rama_trim = pd.DataFrame(rows_rama_trim).sort_values(["Aglomerado", "Rama", "IDX_T"])
+df_rama_trim.drop(columns=["IDX_T"]).round(3).to_csv(
+    DIR_TABLAS / "05c_evolucion_ramas_trim.csv", index=False, sep=";", decimal=","
+)
+
+fig5c, axes5c = plt.subplots(2, 1, figsize=(13.5, 8.8), sharey=True)
+colores_ramas = {
+    "Servicios prof., finan. e inf.": "#0D47A1",
+    "Adm. pública y defensa": "#9FA300",
+    "Enseñanza y salud": "#42A5F5",
+    "Industria manufacturera": "#AB00FA"
+}
+
+for i, (aglo, ramas_lista) in enumerate([("CABA", top3_caba), ("Gran Buenos Aires", top3_gba)]):
+    ax = axes5c[i]
+    sub = df_rama_trim[df_rama_trim["Aglomerado"] == aglo]
+    for rama in ramas_lista:
+        s_r = sub[sub["Rama"] == rama].sort_values("IDX_T")
+        ax.plot(
+            s_r["IDX_T"], s_r["Mediana_M"],
+            marker="o", markersize=3.5, linewidth=1.9,
+            color=colores_ramas.get(rama, "#455A64"), label=rama
+        )
+    agregar_referencia_2020(ax, label=(i == 1))
+    ax.set_title(aglo, fontsize=11.5, fontweight="bold", loc="left", pad=10)
+    ax.set_ylabel("Mediana ingreso real (2026-T2)", fontsize=9.5, fontweight="bold")
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f"${val:,.1f}M".replace(".", ",")))
+    configurar_eje_temporal(ax, mostrar_labels=True)
+    ax.legend(loc="upper right", ncol=2, frameon=True, fontsize=8.2)
+
+plt.suptitle("Evolución trimestral del ingreso real según principales ramas de actividad",
+             fontsize=12.5, fontweight="bold", y=0.91)
+plt.tight_layout(rect=[0, 0, 1, 0.95], h_pad=2.8)
+
+# Línea divisoria continua negra de lado a lado
+fig5c.canvas.draw()
+pos_sup_5c = axes5c[0].get_position()
+pos_inf_5c = axes5c[1].get_position()
+y_linea_5c = (pos_sup_5c.y0 + pos_inf_5c.y1) / 2 - 0.028
+
+linea_divisoria_5c = Line2D(
+    [0.02, 0.98], [y_linea_5c, y_linea_5c],
+    transform=fig5c.transFigure, color="#000000", linewidth=1.2, linestyle="-"
+)
+fig5c.add_artist(linea_divisoria_5c)
+
+plt.savefig(DIR_GRAFICOS / "05c_ramas_trimestral.png", dpi=300, bbox_inches="tight")
+plt.close()
 # -------------------------------------------------------------------------
 # FIGURA 7: SÍNTESIS MULTIVARIADA (EDAD CH06 + CORRELOGRAMA DE SPEARMAN)
 # -------------------------------------------------------------------------
@@ -499,4 +512,4 @@ plt.tight_layout()
 plt.savefig(DIR_GRAFICOS / "07_edad_y_correlaciones.png", dpi=300, bbox_inches="tight")
 plt.close()
 
-print("Listo: 7 gráficos generados en", DIR_GRAFICOS, "y 7 CSV en", DIR_TABLAS)
+print("Listo: 8 gráficos generados en", DIR_GRAFICOS, "y 7 CSV en", DIR_TABLAS)
