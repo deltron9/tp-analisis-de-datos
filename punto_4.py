@@ -266,8 +266,75 @@ axes[1].spines['top'].set_visible(False)
 axes[1].spines['right'].set_visible(False)
 axes[1].legend(frameon=True, fontsize=9)
 
-plt.suptitle("Modelo de Regresión Lineal e Imputación de No Respuesta en Ocupados (2016 - 2026)",
-            fontsize=12.5, fontweight='bold', y=1.02)
-plt.tight_layout()
+fig.suptitle("Modelo de Regresión Lineal e Imputación de No Respuesta en Ocupados (2016 - 2026)",
+            fontsize=12.5, fontweight='bold', y=0.97)
+fig.text(0.01, 0.01, "Fuente: Elaboración propia en base a EPH-INDEC e IPC-GBA.",
+        fontsize=8.5, color='#555555')
+
+plt.tight_layout(rect=[0, 0.04, 1, 0.92])
 plt.savefig('graficos/07_regresion_e_imputacion.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# -------------------------------------------------------------------------
+# 7. FIGURA 7B: EVOLUCIÓN TRIMESTRAL PONDERADA (TODOS LOS TRIMESTRES)
+# -------------------------------------------------------------------------
+df_ocupados['PERIODO'] = df_ocupados['ANO4'].astype(int).astype(str) + '-T' + df_ocupados['TRIMESTRE'].astype(int).astype(str)
+
+rows_trim = []
+for (ano, trim, per, aglo), g in df_ocupados.groupby(['ANO4', 'TRIMESTRE', 'PERIODO', 'AGLOMERADO_NOM']):
+    # Sin imputar (solo declarados con PONDIIO)
+    g_decl = g[(~g['no_resp_ingreso']) & (g['P21_REAL'] > 0) & (g['PONDIIO'] > 0)]
+    med_decl = weighted_quantiles(g_decl['P21_REAL'], [0.50], g_decl['PONDIIO'])[0] / 1e6 if len(g_decl) > 0 else np.nan
+    
+    # Con imputación (consolidado usando PONDIIO o PONDERA como respaldo)
+    peso_cons = g['PONDIIO'].where(g['PONDIIO'] > 0, g['PONDERA'])
+    mask_cons = (g['P21_CONSOLIDADO'] > 0) & (peso_cons > 0)
+    g_cons = g[mask_cons]
+    med_cons = weighted_quantiles(g_cons['P21_CONSOLIDADO'], [0.50], peso_cons[mask_cons])[0] / 1e6 if len(g_cons) > 0 else np.nan
+    
+    rows_trim.append({
+        'ANO4': int(ano),
+        'TRIMESTRE': int(trim),
+        'PERIODO': per,
+        'AGLOMERADO_NOM': aglo,
+        'Mediana_Declarados': med_decl,
+        'Mediana_Consolidado': med_cons
+    })
+
+df_trim_imp = pd.DataFrame(rows_trim).sort_values(['ANO4', 'TRIMESTRE'])
+
+# 2 filas x 1 columna para dar ancho completo a todos los trimestres
+fig7b, axes7b = plt.subplots(2, 1, figsize=(14.5, 8.2), sharex=True, sharey=True)
+
+for i, aglo in enumerate(['CABA', 'Gran Buenos Aires']):
+    sub = df_trim_imp[df_trim_imp['AGLOMERADO_NOM'] == aglo].reset_index(drop=True)
+    ax = axes7b[i]
+    
+    ax.plot(sub.index, sub['Mediana_Declarados'], marker='o', markersize=4, linewidth=2.0,
+            color='#0077ff', label='Sin imputar (Solo declarados)')
+    ax.plot(sub.index, sub['Mediana_Consolidado'], marker='s', markersize=3.8, linewidth=2.0,
+            linestyle='--', color='#9FA300', label='Con imputación (Consolidado)')
+    
+    # Mostrar TODOS los trimestres en el eje X
+    ax.set_xticks(sub.index)
+    ax.set_xticklabels(sub['PERIODO'], rotation=60, ha='right', fontsize=7.8)
+    ax.tick_params(axis='x', labelbottom=True)
+    
+    ax.set_title(f"{aglo}", fontsize=11.5, fontweight='bold', loc='left', pad=8)
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda val, pos: f'${val:,.1f}M'.replace('.', ',')))
+    ax.set_ylabel("Mediana ingreso real\n(en millones)", fontsize=9.5, fontweight='bold')
+    ax.yaxis.grid(True, linestyle=':', color='gray', alpha=0.5)
+    ax.xaxis.grid(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.legend(loc='upper right', frameon=True, fontsize=9)
+
+fig7b.suptitle("Evolución trimestral de la mediana salarial real: Declarados vs. Base Imputada (2016-T2 a 2026-T2)",
+            fontsize=13, fontweight='bold', y=0.98)
+fig7b.text(0.01, 0.01, "Fuente: Elaboración propia en base a EPH-INDEC e IPC-GBA. Ponderado por PONDIIO (y PONDERA en imputados).",
+        fontsize=8.5, color='#555555')
+
+# Reservar espacio arriba para suptitle y abajo para la fuente
+plt.tight_layout(rect=[0, 0.03, 1, 0.94])
+plt.savefig('graficos/07b_evolucion_trimestral_imputacion.png', dpi=300, bbox_inches='tight')
 plt.show()
