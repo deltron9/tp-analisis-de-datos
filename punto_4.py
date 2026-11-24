@@ -8,6 +8,8 @@ import statsmodels.formula.api as smf
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
+SEMILLA = 7 
+
 BASE_DIR = Path(__file__).resolve().parent
 DIR_GRAFICOS = BASE_DIR / "graficos"
 DIR_GRAFICOS.mkdir(parents=True, exist_ok=True)
@@ -16,26 +18,34 @@ sns.set_theme(style="whitegrid")
 df = pd.read_csv(BASE_DIR / "datos" / "eph_microdatos.csv", low_memory=False)
 df.columns = df.columns.str.strip().str.upper()
 
-#filtracion de universo de ocupados
+#filtrar universo de ocupados
 occ = df[(df["ESTADO"] == 1) & (df["AGLOMERADO"].isin([32, 33]))].copy()
 occ["AGLOMERADO_NOM"] = occ["AGLOMERADO"].map({32: "CABA", 33: "Gran Buenos Aires"})
 
-#horas semanales trabajadas
+
+#horas trabajadas semanales
 occ["HORAS_RAW"] = pd.to_numeric(
-    occ["PP3E_TOT"].astype(str).str.replace(",", "."), errors="coerce"
+    occ["PP3E_TOT"].astype(str).str.replace(",", "."), errors="coerce" #limpieza de comas
 )
 occ.loc[(occ["HORAS_RAW"] <= 0) | (occ["HORAS_RAW"] >= 999), "HORAS_RAW"] = np.nan
 occ["HORAS_MISSING"] = occ["HORAS_RAW"].isna().astype(int)
 occ["HORAS"] = occ["HORAS_RAW"].fillna(
     occ.groupby(["CAT_OCUP", "CH04"])["HORAS_RAW"].transform("median")
 )
+#respaldo: si algun grupo no tuviera ninguna hora valida, se usa la mediana general para no perder la observación en el ajuste.
+occ["HORAS"] = occ["HORAS"].fillna(occ["HORAS_RAW"].median())
 occ["HORAS2"] = occ["HORAS"] ** 2
 
 #edad y edad al cuadrado
 occ["EDAD"] = pd.to_numeric(occ["CH06"], errors="coerce")
 occ["EDAD2"] = occ["EDAD"] ** 2
 
-#calificación ocupacional (ultimo digito de PP04D_COD)
+#calificacion ocupacional (último dígito de PP04D_COD)
+# 1 = profesional
+# 2 = tecnica
+# 3 = operativa
+# 4 = no calificada
+# 9 = sin dato
 cod_cal = occ["PP04D_COD"].dropna().astype(int).astype(str).str.zfill(5).str[-1].astype(int)
 occ["CALIF"] = 9
 occ.loc[cod_cal.index, "CALIF"] = cod_cal
@@ -73,22 +83,49 @@ def agrupar_tamano(v):
         return "No_corresp"
     elif 1 <= v <= 5:
         return "1_a_5"
-    elif 6 <= v <= 10:
+    elif 6 <= v <= 9:
         return "6_a_100"
-    elif v in [11, 12]:
+    elif v in [10, 11, 12]:
         return "Mas_de_100"
     return "Ns_Nr"
 
 occ["TAM_ESTAB"] = occ["PP04C"].apply(agrupar_tamano)
 
-#estimacion de ingreso real (P21_REAL) y ponderaciones
+#funciones auxiliares
+def calcular_piso(base):
+    """Piso positivo para las predicciones: percentil 1 de los ingresos
+    observados, por aglomerado. Evita imputar ingresos negativos o nulos a
+    ocupados que cobran."""
+    return base.groupby("AGLOMERADO")["P21_REAL"].quantile(0.01)
+
+
+def predecir_con_piso(modelo, datos, piso):
+    """Predice y lleva al piso las predicciones menores. Devuelve (pred, al_piso)."""
+    pred = modelo.predict(datos)
+    piso_fila = datos.loc[pred.index, "AGLOMERADO"].map(piso)
+    al_piso = pred < piso_fila
+    return np.maximum(pred, piso_fila), al_piso
+
+
+def mediana_ponderada(valores, pesos):
+    """Mediana ponderada con la misma interpolación que el análisis multivariado."""
+    valores = np.asarray(valores, dtype=float)
+    pesos = np.asarray(pesos, dtype=float)
+    orden = np.argsort(valores)
+    valores, pesos = valores[orden], pesos[orden]
+    acum = np.cumsum(pesos)
+    pos = (acum - 0.5 * pesos) / acum[-1]
+    return float(np.interp(0.5, pos, valores))
+
+
+#estimacion del modelo WLS (ponderado por PONDIIO) para imputar la no respuesta
 train_pool = occ[(occ["P21_REAL"] > 0) & (occ["PONDIIO"] > 0)].copy()
 no_resp = occ[(occ["P21_REAL"] < 0) | (occ["P21_REAL"].isna())].copy()
 
-#division estratificada 80% entrenamiento / 20% evaluacion
+#division estratificada 80% entrenamiento / 20% evaluación
 estrato = train_pool["AGLOMERADO"].astype(str) + "_" + train_pool["ANO4"].astype(str)
 df_train, df_test = train_test_split(
-    train_pool, test_size=0.20, random_state=7, stratify=estrato
+    train_pool, test_size=0.20, random_state=SEMILLA, stratify=estrato
 )
 
 formula = (
@@ -100,58 +137,85 @@ formula = (
 #ajuste por minimos cuadrados ponderados (WLS con PONDIIO)
 modelo_wls = smf.wls(formula, data=df_train, weights=df_train["PONDIIO"]).fit()
 
-#evaluacion en entrenamiento y prueba (acotando predicciones negativas a 0)
-pred_train = np.maximum(0, modelo_wls.predict(df_train))
-pred_test = np.maximum(0, modelo_wls.predict(df_test))
+# evaluacion: el piso se calcula solo con entrenamiento para no usar info del test
+piso_train = calcular_piso(df_train)
+pred_train, _ = predecir_con_piso(modelo_wls, df_train, piso_train)
+pred_test, _ = predecir_con_piso(modelo_wls, df_test, piso_train)
 
-r2_train = modelo_wls.rsquared
+y_train = df_train.loc[pred_train.index, "P21_REAL"]
+y_test = df_test.loc[pred_test.index, "P21_REAL"]
+w_train = df_train.loc[pred_train.index, "PONDIIO"]
+w_test = df_test.loc[pred_test.index, "PONDIIO"]
+
+#r2 en ambas bases (ponderado por PONDIIO y sin ponderar) para entrenamiento y evaluacion
+r2_train_pond = modelo_wls.rsquared
 r2_adj_train = modelo_wls.rsquared_adj
-r2_test = r2_score(df_test["P21_REAL"], pred_test)
-mae_test = mean_absolute_error(df_test["P21_REAL"], pred_test)
-rmse_test = np.sqrt(mean_squared_error(df_test["P21_REAL"], pred_test))
+r2_train_simple = r2_score(y_train, pred_train)
+r2_test_simple = r2_score(y_test, pred_test)
+r2_test_pond = r2_score(y_test, pred_test, sample_weight=w_test)
+mae_test = mean_absolute_error(y_test, pred_test)
+rmse_test = np.sqrt(mean_squared_error(y_test, pred_test))
+
+#imputacion de la no respuesta
 
 #reentrenamiento con el 100% de respondentes validos para maxima precision
 modelo_final = smf.wls(formula, data=train_pool, weights=train_pool["PONDIIO"]).fit()
+piso_final = calcular_piso(train_pool)
 
 no_resp_remun = no_resp[no_resp["CAT_OCUP"].isin([1.0, 2.0, 3.0])].copy()
 no_resp_tfsr = no_resp[no_resp["CAT_OCUP"] == 4.0].copy()
 
-occ["P21_IMPUTADO"] = occ["P21_REAL"]
-occ.loc[no_resp_remun.index, "P21_IMPUTADO"] = np.maximum(0, modelo_final.predict(no_resp_remun))
-occ.loc[no_resp_tfsr.index, "P21_IMPUTADO"] = 0.0
+pred_imp, al_piso = predecir_con_piso(modelo_final, no_resp_remun, piso_final)
+sin_prediccion = no_resp_remun.index.difference(pred_imp.index)
+if len(sin_prediccion) > 0:
+    print(f"{len(sin_prediccion)} no respondentes sin predicción (variables faltantes).")
 
-#comparacion de medias ponderadas: oficial (PONDIIO) vs base imputada (PONDERA)
+occ["P21_IMPUTADO"] = occ["P21_REAL"]
+occ["IMPUTADO"] = False
+occ.loc[pred_imp.index, "P21_IMPUTADO"] = pred_imp
+occ.loc[pred_imp.index, "IMPUTADO"] = True
+occ.loc[no_resp_tfsr.index, "P21_IMPUTADO"] = 0.0   # trabajadores familiares sin remuneracion
+
+# comparacion: oficial (respondentes con PONDIIO) vs base imputada (todos con PONDERA)
 resumen_imp = []
 for aglo, nom in [(32, "CABA"), (33, "Gran Buenos Aires")]:
     obs = occ[(occ["AGLOMERADO"] == aglo) & (occ["P21_REAL"] > 0) & (occ["PONDIIO"] > 0)]
-    imp = occ[(occ["AGLOMERADO"] == aglo) & (occ["P21_IMPUTADO"] > 0) & (occ["PONDERA"] > 0)]
+    idx_imp = occ.index[(occ["AGLOMERADO"] == aglo) & occ["IMPUTADO"]]
+    imp = occ.loc[obs.index.union(idx_imp)]
+    imp = imp[imp["PONDERA"] > 0]
+
     media_oficial = np.average(obs["P21_REAL"], weights=obs["PONDIIO"])
     media_imputada = np.average(imp["P21_IMPUTADO"], weights=imp["PONDERA"])
+    mediana_oficial = mediana_ponderada(obs["P21_REAL"], obs["PONDIIO"])
+    mediana_imputada = mediana_ponderada(imp["P21_IMPUTADO"], imp["PONDERA"])
+
     resumen_imp.append({
         "Aglomerado": nom,
         "Casos_Observados": len(obs),
-        "Casos_Imputados": len(imp) - len(obs),
+        "Casos_Imputados": len(idx_imp),
+        "Casos_Imputados_al_Piso": int(al_piso.loc[idx_imp].sum()),
         "Media_Oficial_PONDIIO": round(media_oficial, 0),
         "Media_Con_Imputacion_PONDERA": round(media_imputada, 0),
-        "Diferencia_Pct": round((media_imputada / media_oficial - 1) * 100, 2)
+        "Diferencia_Media_Pct": round((media_imputada / media_oficial - 1) * 100, 2),
+        "Mediana_Oficial_PONDIIO": round(mediana_oficial, 0),
+        "Mediana_Con_Imputacion_PONDERA": round(mediana_imputada, 0),
+        "Diferencia_Mediana_Pct": round((mediana_imputada / mediana_oficial - 1) * 100, 2),
     })
 
 df_res_imp = pd.DataFrame(resumen_imp)
+residuos_test = y_test - pred_test
 
-#generacion de graficos de diagnostico del modelo WLS
-residuos_test = df_test["P21_REAL"] - pred_test
-
-#grafico 1 observado vs predicho
+#grafico observado vs predicho
 fig1, ax1 = plt.subplots(figsize=(8.8, 5.2))
 ax1.scatter(
-    df_test["P21_REAL"] / 1e6, pred_test / 1e6,
+    y_test / 1e6, pred_test / 1e6,
     alpha=0.18, s=14, color="#0077ff", edgecolors="none"
 )
 ax1.plot([0, 6], [0, 6], color="#D32F2F", linestyle="--", linewidth=1.8, label="Predicción perfecta (y = x)")
 ax1.set_xlim(0, 6)
 ax1.set_ylim(0, 4.5)
 ax1.set_title(
-    f"Evaluación del modelo WLS: Observado vs. Predicho en Test ($R^2 = {r2_test:.3f}$)",
+    f"Evaluación del modelo WLS: Observado vs. Predicho en Test ($R^2 = {r2_test_simple:.3f}$)",
     fontsize=11.5, fontweight="bold", loc="left", pad=12
 )
 ax1.set_xlabel("Ingreso real observado en millones (2026-T2)", fontsize=9.5, fontweight="bold")
@@ -165,10 +229,10 @@ ax1.spines["top"].set_visible(False)
 ax1.spines["right"].set_visible(False)
 
 plt.tight_layout()
-plt.savefig(DIR_GRAFICOS / "08a_observado_vs_predicho.png", dpi=300, bbox_inches="tight")
+plt.savefig(DIR_GRAFICOS / "10_observado_vs_predicho.png", dpi=300, bbox_inches="tight")
 plt.close(fig1)
 
-# grafico 2 residuos vs predichos
+#grafico residuos vs predichos
 fig2, ax2 = plt.subplots(figsize=(8.8, 5.2))
 ax2.scatter(
     pred_test / 1e6, residuos_test / 1e6,
@@ -192,5 +256,5 @@ ax2.spines["top"].set_visible(False)
 ax2.spines["right"].set_visible(False)
 
 plt.tight_layout()
-plt.savefig(DIR_GRAFICOS / "08b_residuos_vs_predichos.png", dpi=300, bbox_inches="tight")
+plt.savefig(DIR_GRAFICOS / "11_residuos_vs_predichos.png", dpi=300, bbox_inches="tight")
 plt.close(fig2)
