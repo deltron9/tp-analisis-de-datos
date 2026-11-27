@@ -22,7 +22,7 @@ df_2016 = pd.DataFrame([
 ])
 
 # 2. Lectura del CSV oficial INDEC (201701 en adelante, Nivel General GBA)
-df_csv = pd.read_csv("./datos/serie_ipc_divisiones212016-102026.csv", sep=";", encoding="latin1", decimal=",")
+df_csv = pd.read_csv("./datos/ipc_indec_212016-102026.csv", sep=";", encoding="latin1", decimal=",")
 df_gba = df_csv[
     (df_csv["Codigo"] == "0") &
     (df_csv["Region"] == "GBA") &
@@ -50,6 +50,6 @@ ipc_trim["COEF_DEFLACTOR_2026T2"] = (ipc_base_2026t2 / ipc_trim["IPC_GBA_TRIM"])
 ipc_trim["COEF_DEFLACTOR_2026T3"] = (ipc_base_2026t3 / ipc_trim["IPC_GBA_TRIM"]).round(6)
 ipc_trim["IPC_GBA_TRIM"] = ipc_trim["IPC_GBA_TRIM"].round(6)
 
-output_filename = "./datos/ipc_gba_trimestral_2016T2_2026T3.csv"
+output_filename = "./datos/ipc_consolidado_2016T2_2026T3.csv"
 ipc_trim.drop(columns=["MESES_RELEVADOS"]).to_csv(output_filename, index=False)
 print("Generado:", output_filename)

@@ -1,0 +1,13 @@
+Aglomerado;Grupo_Edad;Sexo;Casos_n;Q1_M;Mediana_M;Q3_M
+CABA;15 a 29 años;Mujeres;2336;0,579;0,943;1,41
+CABA;15 a 29 años;Varones;2411;0,706;1,141;1,589
+CABA;30 a 49 años;Mujeres;6387;0,838;1,333;2,004
+CABA;30 a 49 años;Varones;6349;1,12;1,645;2,472
+CABA;50 años y más;Mujeres;3972;0,647;1,283;2,065
+CABA;50 años y más;Varones;4412;1,049;1,672;2,601
+Gran Buenos Aires;15 a 29 años;Mujeres;7214;0,307;0,594;0,953
+Gran Buenos Aires;15 a 29 años;Varones;9894;0,518;0,856;1,236
+Gran Buenos Aires;30 a 49 años;Mujeres;17058;0,391;0,789;1,294
+Gran Buenos Aires;30 a 49 años;Varones;19888;0,761;1,175;1,711
+Gran Buenos Aires;50 años y más;Mujeres;9820;0,312;0,658;1,195
+Gran Buenos Aires;50 años y más;Varones;12278;0,615;1,1;1,711
